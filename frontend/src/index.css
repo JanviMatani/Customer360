@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --canvas: #F4F2ED;
+    --surface: #FFFFFF;
+    --surface-secondary: #ECEAE4;
+    --surface-tertiary: #E5E2DA;
+    --border: #D8D5CD;
+    --border-strong: #BCB8AD;
+    --text: #20252B;
+    --text-muted: #68717C;
+    --accent: #2457A6;
+    --accent-dark: #183B70;
+    --accent-light: #EBF1FA;
+    --success: #287A52;
+    --success-light: #EBF4EF;
+    --warning: #A66A16;
+    --warning-light: #FBF4EB;
+    --danger: #B84242;
+    --danger-light: #F9ECEC;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: #F4F2ED;
+    color: #20252B;
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Accessible focus rings */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #2457A6;
+    outline-offset: 1px;
+  }
+}
+
+/* Institutional crisp scrollbar for data-dense tables & panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ECEAE4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8D5CD;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #BCB8AD;
+}
+
+/* Prevent unwanted browser bounce and duplicate scrollbars */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
