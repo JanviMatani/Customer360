@@ -36,6 +36,7 @@ public class IngestionController {
     @Audited(action = "REMATCH_ALL", targetType = "pipeline")
     public ResponseEntity<Map<String, Object>> rematch() {
         int pairs = ingestionService.reloadAndMatchAll();
+        opportunityRuleEngine.recomputeAllOpportunities();
         return ResponseEntity.ok(Map.of("message", "Rematch completed successfully", "evaluatedPairs", pairs));
     }
 

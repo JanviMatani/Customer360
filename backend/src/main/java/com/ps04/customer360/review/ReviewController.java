@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/review")
-@PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+@PreAuthorize("hasAnyRole('RM', 'MANAGER', 'ADMIN')")
 public class ReviewController {
 
     private final ReviewService reviewService;

@@ -26,7 +26,7 @@ public class OpportunityScoringService {
         this.configService = configService;
     }
 
-    public int computeScore(Double potentialValue, Double relationshipValue) {
+    public int computeScore(Double potentialValue, Double relationshipValue, double recency, double engagement) {
         // Read score weights live from config
         Map<String, Object> weights = configService.getScoringWeights();
 
@@ -43,12 +43,6 @@ public class OpportunityScoringService {
 
         double normP = Math.min(1.0, pVal / maxPotential);
         double normR = Math.min(1.0, rVal / maxRelationship);
-
-        // recency and engagement: fixed signals for hackathon dataset
-        // (all customers in dataset are active/multi-product by definition)
-        // In production these would be computed from interaction history.
-        double recency    = 0.85;
-        double engagement = 0.90;
 
         double rawScore = (wPotential * normP)
                 + (wRelationship * normR)

@@ -34,6 +34,28 @@ public class Opportunity {
 
     private Instant generatedAt;
     private Instant updatedAt;
+    private Instant lastScoredAt;
+
+    // Feature 3 — Staleness
+    private String factSheetHash;
+
+    // Feature 4 — Missing data
+    private String dataCompleteness;   // "COMPLETE" | "INCOMPLETE"
+    private List<String> missingFields;
+
+    // Feature 5 — Bundling / suppression
+    private String category;           // "INVESTMENT" | "PROTECTION" | "CREDIT" | "WEALTH"
+    private boolean suppressed;
+    private String suppressedByOppId;
+    private String bundleSummary;
+
+    // Feature 6 — Contact timing
+    private String contactWindow;      // e.g. "MORNING_WEEKDAY"
+    private String suggestedContactBy; // ISO date string
+    private String contactReason;
+
+    // Feature 7 — AI summary
+    private String aiSummary;
 
     public Opportunity() {}
 
@@ -51,6 +73,18 @@ public class Opportunity {
         this.reasons = reasons;
         this.generatedAt = generatedAt;
         this.updatedAt = updatedAt;
+        this.lastScoredAt = null;
+        this.factSheetHash = null;
+        this.dataCompleteness = "COMPLETE";
+        this.missingFields = null;
+        this.category = null;
+        this.suppressed = false;
+        this.suppressedByOppId = null;
+        this.bundleSummary = null;
+        this.contactWindow = null;
+        this.suggestedContactBy = null;
+        this.contactReason = null;
+        this.aiSummary = null;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -69,6 +103,7 @@ public class Opportunity {
         private List<ReasonItem> reasons;
         private Instant generatedAt;
         private Instant updatedAt;
+        private Instant lastScoredAt;
 
         public Builder id(String id) { this.id = id; return this; }
         public Builder goldenId(String goldenId) { this.goldenId = goldenId; return this; }
@@ -83,6 +118,7 @@ public class Opportunity {
         public Builder reasons(List<ReasonItem> reasons) { this.reasons = reasons; return this; }
         public Builder generatedAt(Instant generatedAt) { this.generatedAt = generatedAt; return this; }
         public Builder updatedAt(Instant updatedAt) { this.updatedAt = updatedAt; return this; }
+        public Builder lastScoredAt(Instant lastScoredAt) { this.lastScoredAt = lastScoredAt; return this; }
 
         public Opportunity build() {
             return new Opportunity(id, goldenId, customerName, rmId, product, score, potentialValue, status, dismissedReason, ruleId, reasons, generatedAt, updatedAt);
@@ -127,6 +163,42 @@ public class Opportunity {
 
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+
+    public Instant getLastScoredAt() { return lastScoredAt; }
+    public void setLastScoredAt(Instant lastScoredAt) { this.lastScoredAt = lastScoredAt; }
+
+    public String getFactSheetHash() { return factSheetHash; }
+    public void setFactSheetHash(String factSheetHash) { this.factSheetHash = factSheetHash; }
+
+    public String getDataCompleteness() { return dataCompleteness; }
+    public void setDataCompleteness(String dataCompleteness) { this.dataCompleteness = dataCompleteness; }
+
+    public List<String> getMissingFields() { return missingFields; }
+    public void setMissingFields(List<String> missingFields) { this.missingFields = missingFields; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public boolean isSuppressed() { return suppressed; }
+    public void setSuppressed(boolean suppressed) { this.suppressed = suppressed; }
+
+    public String getSuppressedByOppId() { return suppressedByOppId; }
+    public void setSuppressedByOppId(String suppressedByOppId) { this.suppressedByOppId = suppressedByOppId; }
+
+    public String getBundleSummary() { return bundleSummary; }
+    public void setBundleSummary(String bundleSummary) { this.bundleSummary = bundleSummary; }
+
+    public String getContactWindow() { return contactWindow; }
+    public void setContactWindow(String contactWindow) { this.contactWindow = contactWindow; }
+
+    public String getSuggestedContactBy() { return suggestedContactBy; }
+    public void setSuggestedContactBy(String suggestedContactBy) { this.suggestedContactBy = suggestedContactBy; }
+
+    public String getContactReason() { return contactReason; }
+    public void setContactReason(String contactReason) { this.contactReason = contactReason; }
+
+    public String getAiSummary() { return aiSummary; }
+    public void setAiSummary(String aiSummary) { this.aiSummary = aiSummary; }
 
     public static class ReasonItem {
         private String label;

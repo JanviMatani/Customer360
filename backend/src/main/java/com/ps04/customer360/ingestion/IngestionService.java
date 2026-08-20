@@ -5,6 +5,7 @@ import com.ps04.customer360.config_rules.ConfigService;
 import com.ps04.customer360.golden.GoldenCustomerLinkRepo;
 import com.ps04.customer360.golden.GoldenCustomerRepo;
 import com.ps04.customer360.golden.GoldenCustomerService;
+import com.ps04.customer360.golden.model.GoldenCustomerLink;
 import com.ps04.customer360.ingestion.model.*;
 import com.ps04.customer360.matching.*;
 import com.ps04.customer360.matching.CandidateGenerationService.SourceRecordRef;
@@ -290,8 +291,11 @@ public class IngestionService {
 
     private void createSingleSourceGoldenCustomers(List<SourceRecordRef> records) {
         for (SourceRecordRef r : records) {
-            // confidence = 0: no cross-system match was proven for this record
+            List<GoldenCustomerLink> existingLinks = goldenCustomerLinkRepo.findBySourceSystemAndSourceCustomerId(r.sourceSystem(), r.sourceCustomerId());
+            if (existingLinks.isEmpty()) {
+                // confidence = 0: no cross-system match was proven for this record
                 goldenCustomerService.mergeRecords(List.of(r), null, "SINGLE_SOURCE", 0, "system");
+            }
         }
     }
 
