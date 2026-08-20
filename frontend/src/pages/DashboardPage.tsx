@@ -65,7 +65,7 @@ export const DashboardPage: React.FC = () => {
   const demoCandidates = customersData?.customers?.slice(0, 3) || [];
 
   return (
-    <div className="h-full flex flex-col gap-4 text-[#1E293B] overflow-hidden">
+    <div className="flex flex-col gap-4 text-[#1E293B]">
       
       {/* Top Welcome / Header */}
       <div className="flex items-center justify-between shrink-0 bg-white p-4 rounded-lg border border-gray-200">
@@ -155,10 +155,10 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Main Bottom Section (Split-Pane Grid) */}
-      <div className="flex-1 min-h-0 grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-12 gap-4">
         {/* Left Column: Silo Distribution (Bar Chart) */}
-        <div className="col-span-6 bg-white p-4 rounded-lg border border-gray-200 flex flex-col min-h-0 shadow-2xs">
-          <div className="flex items-center justify-between pb-2 border-b border-gray-100 shrink-0">
+        <div className="col-span-12 lg:col-span-6 bg-white p-4 rounded-lg border border-gray-200 flex flex-col shadow-2xs">
+          <div className="flex items-center justify-between pb-2 border-b border-gray-100">
             <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
               <Database size={14} className="text-[#1B4FD8]" />
               <span>Silo Product Holdings</span>
@@ -166,8 +166,8 @@ export const DashboardPage: React.FC = () => {
             <span className="text-[10px] font-mono text-gray-400">Real-Time Ingestion</span>
           </div>
 
-          <div className="flex-1 min-h-0 mt-4">
-            <ResponsiveContainer width="100%" height="90%">
+          <div className="h-64 mt-4">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={productChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="name" stroke="#64748B" fontSize={10} tickLine={false} />
                 <YAxis stroke="#64748B" fontSize={10} tickLine={false} />
@@ -190,8 +190,8 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Right Column: Live Golden Registry (Table/Cards) */}
-        <div className="col-span-6 bg-white p-4 rounded-lg border border-gray-200 flex flex-col min-h-0 shadow-2xs">
-          <div className="flex items-center justify-between pb-2 border-b border-gray-100 shrink-0">
+        <div className="col-span-12 lg:col-span-6 bg-white p-4 rounded-lg border border-gray-200 flex flex-col shadow-2xs">
+          <div className="flex items-center justify-between pb-2 border-b border-gray-100">
             <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
               <ShieldCheck size={14} className="text-emerald-600" />
               <span>Priority Customer Registry</span>
@@ -206,7 +206,7 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           {/* Customer list table */}
-          <div className="flex-1 overflow-y-auto mt-2 min-h-0">
+          <div className="h-64 overflow-y-auto mt-2">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
