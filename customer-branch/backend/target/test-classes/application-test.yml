@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/customer360_test
+      auto-index-creation: true
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.4

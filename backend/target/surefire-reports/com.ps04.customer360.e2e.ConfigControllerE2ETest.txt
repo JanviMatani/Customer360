@@ -1,4 +1,344 @@
 -------------------------------------------------------------------------------
 Test set: com.ps04.customer360.e2e.ConfigControllerE2ETest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.902 s -- in com.ps04.customer360.e2e.ConfigControllerE2ETest
+Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 0.933 s <<< FAILURE! -- in com.ps04.customer360.e2e.ConfigControllerE2ETest
+com.ps04.customer360.e2e.ConfigControllerE2ETest.get_asRm_readOnlyAllowed -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@1c72189f testClass = com.ps04.customer360.e2e.ConfigControllerE2ETest, locations = [], classes = [com.ps04.customer360.Customer360Application], contextInitializerClasses = [], activeProfiles = ["test"], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [[ImportsContextCustomizer@14be750c key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1852a3ff, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2a76840c, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3ed242a4, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@7b84fcf8, org.springframework.boot.test.context.SpringBootTestAnnotation@3a337d36], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:180)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1724)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at java.base/java.util.Optional.orElseGet(Optional.java:368)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'datasetFixtures' defined in file [/Users/kajol/Documents/Customer360/main-branch/backend/target/test-classes/com/ps04/customer360/fixtures/DatasetFixtures.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'ingestionService' defined in file [/Users/kajol/Documents/Customer360/main-branch/backend/target/classes/com/ps04/customer360/ingestion/IngestionService.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'rawEquityRepo' defined in com.ps04.customer360.ingestion.RawEquityRepo defined in @EnableMongoRepositories declared on MongoRepositoriesRegistrar.EnableMongoRepositoriesConfiguration: Cannot resolve reference to bean 'mongoTemplate' while setting bean property 'mongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:137)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46)
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1454)
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:553)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:137)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:108)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:225)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:152)
+	... 17 more
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'ingestionService' defined in file [/Users/kajol/Documents/Customer360/main-branch/backend/target/classes/com/ps04/customer360/ingestion/IngestionService.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'rawEquityRepo' defined in com.ps04.customer360.ingestion.RawEquityRepo defined in @EnableMongoRepositories declared on MongoRepositoriesRegistrar.EnableMongoRepositoriesConfiguration: Cannot resolve reference to bean 'mongoTemplate' while setting bean property 'mongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
+	... 41 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'rawEquityRepo' defined in com.ps04.customer360.ingestion.RawEquityRepo defined in @EnableMongoRepositories declared on MongoRepositoriesRegistrar.EnableMongoRepositoriesConfiguration: Cannot resolve reference to bean 'mongoTemplate' while setting bean property 'mongoOperations'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1685)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1434)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
+	... 55 more
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'mongoTemplate' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoDatabaseFactoryDependentConfiguration.class]: Unsatisfied dependency expressed through method 'mongoTemplate' parameter 0: Error creating bean with name 'mongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoDatabaseFactoryConfiguration.class]: Unsatisfied dependency expressed through method 'mongoDatabaseFactory' parameter 0: Error creating bean with name 'syncClientServerWrapper' defined in class path resource [de/flapdoodle/embed/mongo/spring/autoconfigure/EmbeddedMongoAutoConfiguration$SyncClientServerWrapperConfig.class]: rollback after error on transition to State(Archive), successful reached:
+  State(DownloadCache)=de.flapdoodle.embed.process.store.LocalDownloadCache@59e082f8,
+  State(Package)=Package{archiveType=TGZ, fileSet=FileSet{entries=[Entry{type=Executable, destination=mongod, uncompiledMatchingPattern=UncompiledPattern{regex=.*mongod, flags=2}}]}, url=https://fastdl.mongodb.org/osx/mongodb-macos-arm64-7.0.4.tgz},
+  State(ExtractedFileSetStore)=de.flapdoodle.embed.process.store.ContentHashExtractedFileSetStore@7185e611,
+  State(ProcessArguments)=ProcessArguments([--dbpath, /var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355, --noauth, --port, 58315, --bind_ip, 127.0.0.1, --syncdelay=0]),
+  State(ProcessWorkingDir)=ProcessWorkingDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/workingDir18110163015198661661),
+  State(Distribution)=GenericFeatureAwareVersion{7.0.4}:Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(SupportConfig)=SupportConfig{name=mongod, supportUrl=https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/issues, messageOnException=de.flapdoodle.embed.mongo.transitions.ProcessDefaults$$Lambda/0x00007ff001574788@44d43cc9},
+  State(Name)=Name(mongod),
+  State(PersistentDir)=ImmutablePersistentDir(/Users/kajol/.embedmongo),
+  State(DatabaseDir)=DatabaseDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355),
+  State(TempDir)=ImmutableTempDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c),
+  State(DistributionBaseUrl)=DistributionBaseUrl(https://fastdl.mongodb.org),
+  State(Platform)=Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(ProcessConfig)=ProcessConfig{daemonProcess=false, stopTimeoutInMillis=5000},
+  State(ProcessEnv)=ProcessEnv({}),
+  State(ProcessOutput)=ProcessOutput{output=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@384472bf, error=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@656ec00d, commands=de.flapdoodle.embed.process.io.NamedOutputStreamProcessor@3b8507df},
+  State(SystemEnv)=SystemEnv({HOMEBREW_PREFIX=/opt/homebrew, COMMAND_MODE=unix2003, SHLVL=2, INFOPATH=/opt/homebrew/share/info:, SHELL=/bin/zsh, __CFBundleIdentifier=com.google.antigravity, TMPDIR=/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/, ANTIGRAVITY_SOURCE_METADATA={"tool":{"conversationId":"6408d196-8454-49ac-8fb5-74f693cca4e2","stepIndex":69,"toolCall":{"id":"call_2125547","name":"run_command","argumentsJson":"{\"CommandLine\":\"mvn test\",\"Cwd\":\"/Users/kajol/Documents/Customer360/main-branch/backend\",\"WaitMsBeforeAsync\":10000,\"toolAction\":\"Running backend unit and E2E tests\",\"toolSummary\":\"Run Maven tests\"}","thinkingSignature":"Eq4CCqsCARFNMg+J71B9CJKJRjM9Cezw3X/o3oMvvY8zsVv4iNhcOVNkC5znz3wkZpBvoNu+72IKkvOWPQAGhqtzxWjB4sZsjrw76NvRCC0a/9bdkFbyFDj1UQpN/9JcP7J3ZtyWlbcpkVvAhAIXQRNReQhm99YwtQ/FfbkRxOqfgpubKkDoUlkVUB+QEbAhWdvca1qro520rjvcwCi0snEsRVh9NSHwO0nMzy38yhkySTjoFPl2A18NZ55WQj3yStvisOZXNRpHxTiTEc+0jLKv2CAYTfTbcQPmZQq0JyB9yEmOPwK5yJA3AwHIyE/HXLIv3bDRU2a16EoIHgyUF4IM3/OvqLGCF7UAj0g3URLtok5Fz6rEFAOQ0VYOuyCBeXkoXsbJ4c/oKUQ5cR5SSBw="}}}, MAVEN_PROJECTBASEDIR=/Users/kajol/Documents/Customer360/main-branch/backend, HOME=/Users/kajol, HOMEBREW_REPOSITORY=/opt/homebrew, PATH=/Users/kajol/.gemini/antigravity/bin:/Users/kajol/Library/Application Support/Antigravity/bin:/opt/homebrew/opt/openjdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin, LOGNAME=kajol, ANTIGRAVITY_CSRF_TOKEN=28ba7d25-7de0-4df8-9387-ef698f9d7949, OSLogRateLimit=64, XPC_FLAGS=0x0, ZSH_TMUX_AUTOSTART=false, __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0, MAVEN_CMD_LINE_ARGS= test, ANTIGRAVITY_PROJECT_ID=18d392b3-2085-4ea2-9c5f-85621d08c697, LANG=C.UTF-8, ZSH_TMUX_AUTOSTARTED=true, CHROME_DEVTOOLS_MCP_JS=/Volumes/Antigravity/Antigravity.app/Contents/Resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js, JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home, DISABLE_AUTO_UPDATE=true, ANTIGRAVITY_LS_ADDRESS=localhost:50090, AGY_BROWSER_ACTIVE_PORT_FILE=/Users/kajol/Library/Application Support/Antigravity/DevToolsActivePort, ANTIGRAVITY_LS_VERSION=hub-2.8.1, SSH_AUTH_SOCK=/var/run/com.apple.launchd.lMyWcg9D5W/Listeners, ANTIGRAVITY_AGENT=1, ANTIGRAVITY_AGENTAPI_EXE=/Volumes/Antigravity/Antigravity.app/Contents/Resources/bin/language_server, ANTIGRAVITY_CONVERSATION_ID=6408d196-8454-49ac-8fb5-74f693cca4e2, OLDPWD=/Users/kajol/Documents/Customer360/main-branch/backend, XPC_SERVICE_NAME=0, USER=kajol, AGY_BROWSER_WS_URL=ws://127.0.0.1:50088/devtools/browser/d1815a53-f137-4fde-bbec-872a8e0e742e, HOMEBREW_CELLAR=/opt/homebrew/Cellar, ANTIGRAVITY_TRAJECTORY_ID=c8128fe5-2377-4198-b44f-d498f1439459, PWD=/Users/kajol/Documents/Customer360/main-branch/backend, _=/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/bin/java, FPATH=/opt/homebrew/share/zsh/site-functions:/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.9/functions}),
+  State(ProgressListener)=de.flapdoodle.embed.process.io.progress.Slf4jProgressListener@5ed25612,
+  State(Command)=MongoD,
+  State(Version)=GenericFeatureAwareVersion{7.0.4},
+  State(Net)=Net{bindIp=127.0.0.1, port=58315, isIpv6=false},
+  State(MongodArguments)=MongodArguments{syncDelay=0, useDefaultSyncDelay=false, isVerbose=false, verbosityLevel=1, isQuiet=false, useNoPrealloc=true, useSmallFiles=true, useNoJournal=true, enableTextSearch=false, auth=false, master=false, isConfigServer=false, isShardServer=false, params={}, args={}}
+
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:542)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 69 more
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'mongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoDatabaseFactoryConfiguration.class]: Unsatisfied dependency expressed through method 'mongoDatabaseFactory' parameter 0: Error creating bean with name 'syncClientServerWrapper' defined in class path resource [de/flapdoodle/embed/mongo/spring/autoconfigure/EmbeddedMongoAutoConfiguration$SyncClientServerWrapperConfig.class]: rollback after error on transition to State(Archive), successful reached:
+  State(DownloadCache)=de.flapdoodle.embed.process.store.LocalDownloadCache@59e082f8,
+  State(Package)=Package{archiveType=TGZ, fileSet=FileSet{entries=[Entry{type=Executable, destination=mongod, uncompiledMatchingPattern=UncompiledPattern{regex=.*mongod, flags=2}}]}, url=https://fastdl.mongodb.org/osx/mongodb-macos-arm64-7.0.4.tgz},
+  State(ExtractedFileSetStore)=de.flapdoodle.embed.process.store.ContentHashExtractedFileSetStore@7185e611,
+  State(ProcessArguments)=ProcessArguments([--dbpath, /var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355, --noauth, --port, 58315, --bind_ip, 127.0.0.1, --syncdelay=0]),
+  State(ProcessWorkingDir)=ProcessWorkingDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/workingDir18110163015198661661),
+  State(Distribution)=GenericFeatureAwareVersion{7.0.4}:Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(SupportConfig)=SupportConfig{name=mongod, supportUrl=https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/issues, messageOnException=de.flapdoodle.embed.mongo.transitions.ProcessDefaults$$Lambda/0x00007ff001574788@44d43cc9},
+  State(Name)=Name(mongod),
+  State(PersistentDir)=ImmutablePersistentDir(/Users/kajol/.embedmongo),
+  State(DatabaseDir)=DatabaseDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355),
+  State(TempDir)=ImmutableTempDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c),
+  State(DistributionBaseUrl)=DistributionBaseUrl(https://fastdl.mongodb.org),
+  State(Platform)=Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(ProcessConfig)=ProcessConfig{daemonProcess=false, stopTimeoutInMillis=5000},
+  State(ProcessEnv)=ProcessEnv({}),
+  State(ProcessOutput)=ProcessOutput{output=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@384472bf, error=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@656ec00d, commands=de.flapdoodle.embed.process.io.NamedOutputStreamProcessor@3b8507df},
+  State(SystemEnv)=SystemEnv({HOMEBREW_PREFIX=/opt/homebrew, COMMAND_MODE=unix2003, SHLVL=2, INFOPATH=/opt/homebrew/share/info:, SHELL=/bin/zsh, __CFBundleIdentifier=com.google.antigravity, TMPDIR=/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/, ANTIGRAVITY_SOURCE_METADATA={"tool":{"conversationId":"6408d196-8454-49ac-8fb5-74f693cca4e2","stepIndex":69,"toolCall":{"id":"call_2125547","name":"run_command","argumentsJson":"{\"CommandLine\":\"mvn test\",\"Cwd\":\"/Users/kajol/Documents/Customer360/main-branch/backend\",\"WaitMsBeforeAsync\":10000,\"toolAction\":\"Running backend unit and E2E tests\",\"toolSummary\":\"Run Maven tests\"}","thinkingSignature":"Eq4CCqsCARFNMg+J71B9CJKJRjM9Cezw3X/o3oMvvY8zsVv4iNhcOVNkC5znz3wkZpBvoNu+72IKkvOWPQAGhqtzxWjB4sZsjrw76NvRCC0a/9bdkFbyFDj1UQpN/9JcP7J3ZtyWlbcpkVvAhAIXQRNReQhm99YwtQ/FfbkRxOqfgpubKkDoUlkVUB+QEbAhWdvca1qro520rjvcwCi0snEsRVh9NSHwO0nMzy38yhkySTjoFPl2A18NZ55WQj3yStvisOZXNRpHxTiTEc+0jLKv2CAYTfTbcQPmZQq0JyB9yEmOPwK5yJA3AwHIyE/HXLIv3bDRU2a16EoIHgyUF4IM3/OvqLGCF7UAj0g3URLtok5Fz6rEFAOQ0VYOuyCBeXkoXsbJ4c/oKUQ5cR5SSBw="}}}, MAVEN_PROJECTBASEDIR=/Users/kajol/Documents/Customer360/main-branch/backend, HOME=/Users/kajol, HOMEBREW_REPOSITORY=/opt/homebrew, PATH=/Users/kajol/.gemini/antigravity/bin:/Users/kajol/Library/Application Support/Antigravity/bin:/opt/homebrew/opt/openjdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin, LOGNAME=kajol, ANTIGRAVITY_CSRF_TOKEN=28ba7d25-7de0-4df8-9387-ef698f9d7949, OSLogRateLimit=64, XPC_FLAGS=0x0, ZSH_TMUX_AUTOSTART=false, __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0, MAVEN_CMD_LINE_ARGS= test, ANTIGRAVITY_PROJECT_ID=18d392b3-2085-4ea2-9c5f-85621d08c697, LANG=C.UTF-8, ZSH_TMUX_AUTOSTARTED=true, CHROME_DEVTOOLS_MCP_JS=/Volumes/Antigravity/Antigravity.app/Contents/Resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js, JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home, DISABLE_AUTO_UPDATE=true, ANTIGRAVITY_LS_ADDRESS=localhost:50090, AGY_BROWSER_ACTIVE_PORT_FILE=/Users/kajol/Library/Application Support/Antigravity/DevToolsActivePort, ANTIGRAVITY_LS_VERSION=hub-2.8.1, SSH_AUTH_SOCK=/var/run/com.apple.launchd.lMyWcg9D5W/Listeners, ANTIGRAVITY_AGENT=1, ANTIGRAVITY_AGENTAPI_EXE=/Volumes/Antigravity/Antigravity.app/Contents/Resources/bin/language_server, ANTIGRAVITY_CONVERSATION_ID=6408d196-8454-49ac-8fb5-74f693cca4e2, OLDPWD=/Users/kajol/Documents/Customer360/main-branch/backend, XPC_SERVICE_NAME=0, USER=kajol, AGY_BROWSER_WS_URL=ws://127.0.0.1:50088/devtools/browser/d1815a53-f137-4fde-bbec-872a8e0e742e, HOMEBREW_CELLAR=/opt/homebrew/Cellar, ANTIGRAVITY_TRAJECTORY_ID=c8128fe5-2377-4198-b44f-d498f1439459, PWD=/Users/kajol/Documents/Customer360/main-branch/backend, _=/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/bin/java, FPATH=/opt/homebrew/share/zsh/site-functions:/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.9/functions}),
+  State(ProgressListener)=de.flapdoodle.embed.process.io.progress.Slf4jProgressListener@5ed25612,
+  State(Command)=MongoD,
+  State(Version)=GenericFeatureAwareVersion{7.0.4},
+  State(Net)=Net{bindIp=127.0.0.1, port=58315, isIpv6=false},
+  State(MongodArguments)=MongodArguments{syncDelay=0, useDefaultSyncDelay=false, isVerbose=false, verbosityLevel=1, isQuiet=false, useNoPrealloc=true, useSmallFiles=true, useNoJournal=true, enableTextSearch=false, auth=false, master=false, isConfigServer=false, isShardServer=false, params={}, args={}}
+
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:542)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
+	... 79 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'syncClientServerWrapper' defined in class path resource [de/flapdoodle/embed/mongo/spring/autoconfigure/EmbeddedMongoAutoConfiguration$SyncClientServerWrapperConfig.class]: rollback after error on transition to State(Archive), successful reached:
+  State(DownloadCache)=de.flapdoodle.embed.process.store.LocalDownloadCache@59e082f8,
+  State(Package)=Package{archiveType=TGZ, fileSet=FileSet{entries=[Entry{type=Executable, destination=mongod, uncompiledMatchingPattern=UncompiledPattern{regex=.*mongod, flags=2}}]}, url=https://fastdl.mongodb.org/osx/mongodb-macos-arm64-7.0.4.tgz},
+  State(ExtractedFileSetStore)=de.flapdoodle.embed.process.store.ContentHashExtractedFileSetStore@7185e611,
+  State(ProcessArguments)=ProcessArguments([--dbpath, /var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355, --noauth, --port, 58315, --bind_ip, 127.0.0.1, --syncdelay=0]),
+  State(ProcessWorkingDir)=ProcessWorkingDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/workingDir18110163015198661661),
+  State(Distribution)=GenericFeatureAwareVersion{7.0.4}:Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(SupportConfig)=SupportConfig{name=mongod, supportUrl=https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/issues, messageOnException=de.flapdoodle.embed.mongo.transitions.ProcessDefaults$$Lambda/0x00007ff001574788@44d43cc9},
+  State(Name)=Name(mongod),
+  State(PersistentDir)=ImmutablePersistentDir(/Users/kajol/.embedmongo),
+  State(DatabaseDir)=DatabaseDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355),
+  State(TempDir)=ImmutableTempDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c),
+  State(DistributionBaseUrl)=DistributionBaseUrl(https://fastdl.mongodb.org),
+  State(Platform)=Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(ProcessConfig)=ProcessConfig{daemonProcess=false, stopTimeoutInMillis=5000},
+  State(ProcessEnv)=ProcessEnv({}),
+  State(ProcessOutput)=ProcessOutput{output=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@384472bf, error=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@656ec00d, commands=de.flapdoodle.embed.process.io.NamedOutputStreamProcessor@3b8507df},
+  State(SystemEnv)=SystemEnv({HOMEBREW_PREFIX=/opt/homebrew, COMMAND_MODE=unix2003, SHLVL=2, INFOPATH=/opt/homebrew/share/info:, SHELL=/bin/zsh, __CFBundleIdentifier=com.google.antigravity, TMPDIR=/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/, ANTIGRAVITY_SOURCE_METADATA={"tool":{"conversationId":"6408d196-8454-49ac-8fb5-74f693cca4e2","stepIndex":69,"toolCall":{"id":"call_2125547","name":"run_command","argumentsJson":"{\"CommandLine\":\"mvn test\",\"Cwd\":\"/Users/kajol/Documents/Customer360/main-branch/backend\",\"WaitMsBeforeAsync\":10000,\"toolAction\":\"Running backend unit and E2E tests\",\"toolSummary\":\"Run Maven tests\"}","thinkingSignature":"Eq4CCqsCARFNMg+J71B9CJKJRjM9Cezw3X/o3oMvvY8zsVv4iNhcOVNkC5znz3wkZpBvoNu+72IKkvOWPQAGhqtzxWjB4sZsjrw76NvRCC0a/9bdkFbyFDj1UQpN/9JcP7J3ZtyWlbcpkVvAhAIXQRNReQhm99YwtQ/FfbkRxOqfgpubKkDoUlkVUB+QEbAhWdvca1qro520rjvcwCi0snEsRVh9NSHwO0nMzy38yhkySTjoFPl2A18NZ55WQj3yStvisOZXNRpHxTiTEc+0jLKv2CAYTfTbcQPmZQq0JyB9yEmOPwK5yJA3AwHIyE/HXLIv3bDRU2a16EoIHgyUF4IM3/OvqLGCF7UAj0g3URLtok5Fz6rEFAOQ0VYOuyCBeXkoXsbJ4c/oKUQ5cR5SSBw="}}}, MAVEN_PROJECTBASEDIR=/Users/kajol/Documents/Customer360/main-branch/backend, HOME=/Users/kajol, HOMEBREW_REPOSITORY=/opt/homebrew, PATH=/Users/kajol/.gemini/antigravity/bin:/Users/kajol/Library/Application Support/Antigravity/bin:/opt/homebrew/opt/openjdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin, LOGNAME=kajol, ANTIGRAVITY_CSRF_TOKEN=28ba7d25-7de0-4df8-9387-ef698f9d7949, OSLogRateLimit=64, XPC_FLAGS=0x0, ZSH_TMUX_AUTOSTART=false, __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0, MAVEN_CMD_LINE_ARGS= test, ANTIGRAVITY_PROJECT_ID=18d392b3-2085-4ea2-9c5f-85621d08c697, LANG=C.UTF-8, ZSH_TMUX_AUTOSTARTED=true, CHROME_DEVTOOLS_MCP_JS=/Volumes/Antigravity/Antigravity.app/Contents/Resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js, JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home, DISABLE_AUTO_UPDATE=true, ANTIGRAVITY_LS_ADDRESS=localhost:50090, AGY_BROWSER_ACTIVE_PORT_FILE=/Users/kajol/Library/Application Support/Antigravity/DevToolsActivePort, ANTIGRAVITY_LS_VERSION=hub-2.8.1, SSH_AUTH_SOCK=/var/run/com.apple.launchd.lMyWcg9D5W/Listeners, ANTIGRAVITY_AGENT=1, ANTIGRAVITY_AGENTAPI_EXE=/Volumes/Antigravity/Antigravity.app/Contents/Resources/bin/language_server, ANTIGRAVITY_CONVERSATION_ID=6408d196-8454-49ac-8fb5-74f693cca4e2, OLDPWD=/Users/kajol/Documents/Customer360/main-branch/backend, XPC_SERVICE_NAME=0, USER=kajol, AGY_BROWSER_WS_URL=ws://127.0.0.1:50088/devtools/browser/d1815a53-f137-4fde-bbec-872a8e0e742e, HOMEBREW_CELLAR=/opt/homebrew/Cellar, ANTIGRAVITY_TRAJECTORY_ID=c8128fe5-2377-4198-b44f-d498f1439459, PWD=/Users/kajol/Documents/Customer360/main-branch/backend, _=/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/bin/java, FPATH=/opt/homebrew/share/zsh/site-functions:/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.9/functions}),
+  State(ProgressListener)=de.flapdoodle.embed.process.io.progress.Slf4jProgressListener@5ed25612,
+  State(Command)=MongoD,
+  State(Version)=GenericFeatureAwareVersion{7.0.4},
+  State(Net)=Net{bindIp=127.0.0.1, port=58315, isIpv6=false},
+  State(MongodArguments)=MongodArguments{syncDelay=0, useDefaultSyncDelay=false, isVerbose=false, verbosityLevel=1, isQuiet=false, useNoPrealloc=true, useSmallFiles=true, useNoJournal=true, enableTextSearch=false, auth=false, master=false, isConfigServer=false, isShardServer=false, params={}, args={}}
+
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1786)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
+	... 93 more
+Caused by: java.lang.RuntimeException: rollback after error on transition to State(Archive), successful reached:
+  State(DownloadCache)=de.flapdoodle.embed.process.store.LocalDownloadCache@59e082f8,
+  State(Package)=Package{archiveType=TGZ, fileSet=FileSet{entries=[Entry{type=Executable, destination=mongod, uncompiledMatchingPattern=UncompiledPattern{regex=.*mongod, flags=2}}]}, url=https://fastdl.mongodb.org/osx/mongodb-macos-arm64-7.0.4.tgz},
+  State(ExtractedFileSetStore)=de.flapdoodle.embed.process.store.ContentHashExtractedFileSetStore@7185e611,
+  State(ProcessArguments)=ProcessArguments([--dbpath, /var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355, --noauth, --port, 58315, --bind_ip, 127.0.0.1, --syncdelay=0]),
+  State(ProcessWorkingDir)=ProcessWorkingDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/workingDir18110163015198661661),
+  State(Distribution)=GenericFeatureAwareVersion{7.0.4}:Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(SupportConfig)=SupportConfig{name=mongod, supportUrl=https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/issues, messageOnException=de.flapdoodle.embed.mongo.transitions.ProcessDefaults$$Lambda/0x00007ff001574788@44d43cc9},
+  State(Name)=Name(mongod),
+  State(PersistentDir)=ImmutablePersistentDir(/Users/kajol/.embedmongo),
+  State(DatabaseDir)=DatabaseDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c/mongod-database12194381937910955355),
+  State(TempDir)=ImmutableTempDir(/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/temp--4184fd68-b7f5-46de-acb0-c9120021ef0c),
+  State(DistributionBaseUrl)=DistributionBaseUrl(https://fastdl.mongodb.org),
+  State(Platform)=Platform{operatingSystem=OS_X, architecture=ARM_64},
+  State(ProcessConfig)=ProcessConfig{daemonProcess=false, stopTimeoutInMillis=5000},
+  State(ProcessEnv)=ProcessEnv({}),
+  State(ProcessOutput)=ProcessOutput{output=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@384472bf, error=de.flapdoodle.embed.process.io.Slf4jStreamProcessor@656ec00d, commands=de.flapdoodle.embed.process.io.NamedOutputStreamProcessor@3b8507df},
+  State(SystemEnv)=SystemEnv({HOMEBREW_PREFIX=/opt/homebrew, COMMAND_MODE=unix2003, SHLVL=2, INFOPATH=/opt/homebrew/share/info:, SHELL=/bin/zsh, __CFBundleIdentifier=com.google.antigravity, TMPDIR=/var/folders/_w/qrdp7dn95g3dqhh_nntbft0m0000gn/T/, ANTIGRAVITY_SOURCE_METADATA={"tool":{"conversationId":"6408d196-8454-49ac-8fb5-74f693cca4e2","stepIndex":69,"toolCall":{"id":"call_2125547","name":"run_command","argumentsJson":"{\"CommandLine\":\"mvn test\",\"Cwd\":\"/Users/kajol/Documents/Customer360/main-branch/backend\",\"WaitMsBeforeAsync\":10000,\"toolAction\":\"Running backend unit and E2E tests\",\"toolSummary\":\"Run Maven tests\"}","thinkingSignature":"Eq4CCqsCARFNMg+J71B9CJKJRjM9Cezw3X/o3oMvvY8zsVv4iNhcOVNkC5znz3wkZpBvoNu+72IKkvOWPQAGhqtzxWjB4sZsjrw76NvRCC0a/9bdkFbyFDj1UQpN/9JcP7J3ZtyWlbcpkVvAhAIXQRNReQhm99YwtQ/FfbkRxOqfgpubKkDoUlkVUB+QEbAhWdvca1qro520rjvcwCi0snEsRVh9NSHwO0nMzy38yhkySTjoFPl2A18NZ55WQj3yStvisOZXNRpHxTiTEc+0jLKv2CAYTfTbcQPmZQq0JyB9yEmOPwK5yJA3AwHIyE/HXLIv3bDRU2a16EoIHgyUF4IM3/OvqLGCF7UAj0g3URLtok5Fz6rEFAOQ0VYOuyCBeXkoXsbJ4c/oKUQ5cR5SSBw="}}}, MAVEN_PROJECTBASEDIR=/Users/kajol/Documents/Customer360/main-branch/backend, HOME=/Users/kajol, HOMEBREW_REPOSITORY=/opt/homebrew, PATH=/Users/kajol/.gemini/antigravity/bin:/Users/kajol/Library/Application Support/Antigravity/bin:/opt/homebrew/opt/openjdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin:/Users/kajol/.local/bin, LOGNAME=kajol, ANTIGRAVITY_CSRF_TOKEN=28ba7d25-7de0-4df8-9387-ef698f9d7949, OSLogRateLimit=64, XPC_FLAGS=0x0, ZSH_TMUX_AUTOSTART=false, __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0, MAVEN_CMD_LINE_ARGS= test, ANTIGRAVITY_PROJECT_ID=18d392b3-2085-4ea2-9c5f-85621d08c697, LANG=C.UTF-8, ZSH_TMUX_AUTOSTARTED=true, CHROME_DEVTOOLS_MCP_JS=/Volumes/Antigravity/Antigravity.app/Contents/Resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js, JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home, DISABLE_AUTO_UPDATE=true, ANTIGRAVITY_LS_ADDRESS=localhost:50090, AGY_BROWSER_ACTIVE_PORT_FILE=/Users/kajol/Library/Application Support/Antigravity/DevToolsActivePort, ANTIGRAVITY_LS_VERSION=hub-2.8.1, SSH_AUTH_SOCK=/var/run/com.apple.launchd.lMyWcg9D5W/Listeners, ANTIGRAVITY_AGENT=1, ANTIGRAVITY_AGENTAPI_EXE=/Volumes/Antigravity/Antigravity.app/Contents/Resources/bin/language_server, ANTIGRAVITY_CONVERSATION_ID=6408d196-8454-49ac-8fb5-74f693cca4e2, OLDPWD=/Users/kajol/Documents/Customer360/main-branch/backend, XPC_SERVICE_NAME=0, USER=kajol, AGY_BROWSER_WS_URL=ws://127.0.0.1:50088/devtools/browser/d1815a53-f137-4fde-bbec-872a8e0e742e, HOMEBREW_CELLAR=/opt/homebrew/Cellar, ANTIGRAVITY_TRAJECTORY_ID=c8128fe5-2377-4198-b44f-d498f1439459, PWD=/Users/kajol/Documents/Customer360/main-branch/backend, _=/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/bin/java, FPATH=/opt/homebrew/share/zsh/site-functions:/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.9/functions}),
+  State(ProgressListener)=de.flapdoodle.embed.process.io.progress.Slf4jProgressListener@5ed25612,
+  State(Command)=MongoD,
+  State(Version)=GenericFeatureAwareVersion{7.0.4},
+  State(Net)=Net{bindIp=127.0.0.1, port=58315, isIpv6=false},
+  State(MongodArguments)=MongodArguments{syncDelay=0, useDefaultSyncDelay=false, isVerbose=false, verbosityLevel=1, isQuiet=false, useNoPrealloc=true, useSmallFiles=true, useNoJournal=true, enableTextSearch=false, auth=false, master=false, isConfigServer=false, isShardServer=false, params={}, args={}}
+
+	at de.flapdoodle.reverse.TransitionWalker.initState(TransitionWalker.java:190)
+	at de.flapdoodle.reverse.TransitionWalker.initState(TransitionWalker.java:69)
+	at de.flapdoodle.reverse.TransitionWalker.initState(TransitionWalker.java:65)
+	at de.flapdoodle.embed.mongo.spring.autoconfigure.MongodWrapper.start(MongodWrapper.java:45)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeCustomInitMethod(AbstractAutowireCapableBeanFactory.java:1890)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1843)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1782)
+	... 106 more
+Caused by: java.lang.IllegalStateException: could not download https://fastdl.mongodb.org/osx/mongodb-macos-arm64-7.0.4.tgz (if this issue persist, you can download it manually to /Users/kajol/.embedmongo/archives/https-fastdl-mongodb-org/56cb3d10404e5b9df5358ac4ee83efcb/osxmongodb-macos-arm64-7-0-4-tgz/cd225cba0d68fe3d3587104023ba59c97300ed828dc2850cfdcfd2e1c556f10f/archive.tgz)
+	at de.flapdoodle.embed.process.transitions.DownloadPackage.lambda$result$4(DownloadPackage.java:154)
+	at de.flapdoodle.types.ThrowingRunnable.lambda$mapException$0(ThrowingRunnable.java:33)
+	at de.flapdoodle.embed.process.transitions.DownloadPackage.result(DownloadPackage.java:156)
+	at de.flapdoodle.reverse.TransitionWalker.resolve(TransitionWalker.java:58)
+	at de.flapdoodle.reverse.TransitionWalker.resolve(TransitionWalker.java:46)
+	at de.flapdoodle.reverse.TransitionWalker.initState(TransitionWalker.java:180)
+	... 113 more
+Caused by: java.net.UnknownHostException: fastdl.mongodb.org
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getChainedException(HttpURLConnection.java:1756)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1326)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1307)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:223)
+	at de.flapdoodle.net.URLConnections.downloadAndCopy(URLConnections.java:112)
+	at de.flapdoodle.net.URLConnections.downloadIntoTempFile(URLConnections.java:93)
+	at de.flapdoodle.net.URLConnections.lambda$downloadIntoFile$3(URLConnections.java:82)
+	at de.flapdoodle.net.URLConnections.downloadTo(URLConnections.java:105)
+	at de.flapdoodle.net.URLConnections.downloadIntoFile(URLConnections.java:82)
+	at de.flapdoodle.embed.process.net.UrlStreams.downloadTo(UrlStreams.java:54)
+	at de.flapdoodle.embed.process.net.UrlStreams$Adapter.download(UrlStreams.java:45)
+	at de.flapdoodle.embed.process.transitions.DownloadPackage.lambda$result$3(DownloadPackage.java:136)
+	at de.flapdoodle.types.ThrowingRunnable.lambda$mapException$0(ThrowingRunnable.java:28)
+	... 117 more
+Caused by: java.net.UnknownHostException: fastdl.mongodb.org
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:574)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:668)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:161)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:516)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:604)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:206)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:288)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:963)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:899)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1382)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1307)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getHeaderField(HttpURLConnection.java:2871)
+	at java.base/java.net.URLConnection.getHeaderFieldLong(URLConnection.java:635)
+	at java.base/java.net.URLConnection.getContentLengthLong(URLConnection.java:497)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getContentLengthLong(HttpsURLConnectionImpl.java:374)
+	at de.flapdoodle.net.URLConnections.downloadAndCopy(URLConnections.java:110)
+	... 125 more
+
+com.ps04.customer360.e2e.ConfigControllerE2ETest.put_asAdmin_weightsSumNot100_returns400 -- Time elapsed: 0 s <<< ERROR!
+java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceeded: skipping repeated attempt to load context for [WebMergedContextConfiguration@1c72189f testClass = com.ps04.customer360.e2e.ConfigControllerE2ETest, locations = [], classes = [com.ps04.customer360.Customer360Application], contextInitializerClasses = [], activeProfiles = ["test"], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [[ImportsContextCustomizer@14be750c key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1852a3ff, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2a76840c, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3ed242a4, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@7b84fcf8, org.springframework.boot.test.context.SpringBootTestAnnotation@3a337d36], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:145)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1724)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at java.base/java.util.Optional.orElseGet(Optional.java:368)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+
+com.ps04.customer360.e2e.ConfigControllerE2ETest.put_asRm_forbidden -- Time elapsed: 0 s <<< ERROR!
+java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceeded: skipping repeated attempt to load context for [WebMergedContextConfiguration@1c72189f testClass = com.ps04.customer360.e2e.ConfigControllerE2ETest, locations = [], classes = [com.ps04.customer360.Customer360Application], contextInitializerClasses = [], activeProfiles = ["test"], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [[ImportsContextCustomizer@14be750c key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1852a3ff, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2a76840c, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3ed242a4, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@7b84fcf8, org.springframework.boot.test.context.SpringBootTestAnnotation@3a337d36], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:145)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1724)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at java.base/java.util.Optional.orElseGet(Optional.java:368)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+
+com.ps04.customer360.e2e.ConfigControllerE2ETest.put_asAdmin_reviewThresholdAboveAutoMerge_returns400 -- Time elapsed: 0 s <<< ERROR!
+java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceeded: skipping repeated attempt to load context for [WebMergedContextConfiguration@1c72189f testClass = com.ps04.customer360.e2e.ConfigControllerE2ETest, locations = [], classes = [com.ps04.customer360.Customer360Application], contextInitializerClasses = [], activeProfiles = ["test"], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [[ImportsContextCustomizer@14be750c key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1852a3ff, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2a76840c, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3ed242a4, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@7b84fcf8, org.springframework.boot.test.context.SpringBootTestAnnotation@3a337d36], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:145)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:163)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1724)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at java.base/java.util.Optional.orElseGet(Optional.java:368)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+

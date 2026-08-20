@@ -1,0 +1,7 @@
+target/
+*.class
+*.jar
+*.war
+
+# Spring Boot config with secrets
+src/main/resources/application.properties
