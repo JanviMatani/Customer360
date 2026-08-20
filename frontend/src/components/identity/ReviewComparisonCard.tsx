@@ -105,7 +105,7 @@ export const ReviewComparisonCard: React.FC<ReviewComparisonCardProps> = ({ item
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <ConfidenceBadge score={item.confidence} decision={item.decision} size="md" />
+          <ConfidenceBadge score={item.confidence} decision={item.decision === 'pending' ? undefined : item.decision} size="md" />
         </div>
       </div>
 

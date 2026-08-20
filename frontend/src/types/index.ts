@@ -1,3 +1,7 @@
+// ============================================================
+// CORE DOMAIN TYPES — PS-04 Customer 360 & Opportunity Engine
+// ============================================================
+
 export type UserRole = 'rm' | 'manager' | 'admin';
 
 export type SourceSystem = 'equity' | 'mf' | 'insurance' | 'loans' | 'wealth';
@@ -10,13 +14,17 @@ export type OpportunityProduct = 'insurance' | 'wealth' | 'mf' | 'equity' | 'loa
 
 export type OpportunityStatus = 'new' | 'in_progress' | 'converted' | 'dismissed';
 
+// ============================================================
+// IDENTITY EVIDENCE
+// ============================================================
+
 export interface FieldEvidence {
   field: string;
   weight: number;
   valueA: string | null;
   valueB: string | null;
   result: MatchResult;
-  similarity?: number; // 0-100 for fuzzy fields like name
+  similarity?: number; // 0-100 for fuzzy fields
   explanation?: string;
 }
 
@@ -25,13 +33,14 @@ export interface AttributeConflict {
   selectedValue: string;
   selectedSource: SourceSystem;
   precedenceBadge?: string;
-  conflictingValues: Array<{
-    value: string;
-    source: SourceSystem;
-  }>;
+  conflictingValues: Array<{ value: string; source: SourceSystem }>;
   flaggedForReview?: boolean;
   overrideReason?: string;
 }
+
+// ============================================================
+// PRODUCT HOLDINGS & SOURCE LINEAGE
+// ============================================================
 
 export interface ProductHolding {
   product: OpportunityProduct;
@@ -41,7 +50,7 @@ export interface ProductHolding {
   active: boolean;
   lastActivityDate: string;
   schemeOrPlanName?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export interface SourceRecord {
@@ -65,22 +74,21 @@ export interface SourceRecord {
   branch?: string;
 }
 
+// ============================================================
+// GOLDEN CUSTOMER
+// ============================================================
+
 export interface GoldenCustomer {
   goldenId: string;
   name: string;
-  pan?: string; // masked e.g. ABC1****
-  rawPan?: string; // stored for backend matching
-  mobile?: string; // masked e.g. 98765*****
+  pan?: string;
+  rawPan?: string;
+  mobile?: string;
   rawMobile?: string;
   email?: string;
   dob?: string;
   city?: string;
-  address?: {
-    street?: string;
-    city?: string;
-    state?: string;
-    pincode?: string;
-  };
+  address?: { street?: string; city?: string; state?: string; pincode?: string };
   segment?: string;
   riskProfile?: string;
   createdAt?: string;
@@ -104,6 +112,10 @@ export interface GoldenCustomer {
   conflictReason?: string;
 }
 
+// ============================================================
+// REVIEW QUEUE
+// ============================================================
+
 export interface ReviewItem {
   id: string;
   sourceA: SourceRecord;
@@ -120,6 +132,10 @@ export interface ReviewItem {
   candidateName?: string;
 }
 
+// ============================================================
+// OPPORTUNITY
+// ============================================================
+
 export interface Opportunity {
   id: string;
   goldenId: string;
@@ -135,6 +151,10 @@ export interface Opportunity {
   createdAt: string;
   lastUpdated: string;
 }
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
 
 export interface MatchConfig {
   weights: {
@@ -168,6 +188,10 @@ export interface OpportunityRule {
   description: string;
 }
 
+// ============================================================
+// AUDIT LOG
+// ============================================================
+
 export interface AuditLogEntry {
   id: string;
   timestamp: string;
@@ -176,8 +200,12 @@ export interface AuditLogEntry {
   action: 'CONFIG' | 'MERGE' | 'OPP' | 'SECURITY' | 'OVERRIDE' | 'LOGIN' | 'UNAUTHORIZED';
   targetId?: string;
   description: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
+
+// ============================================================
+// AUTHENTICATION
+// ============================================================
 
 export interface AuthUser {
   id: string;
@@ -188,6 +216,10 @@ export interface AuthUser {
   teamName?: string;
   token: string;
 }
+
+// ============================================================
+// DASHBOARD STATS
+// ============================================================
 
 export interface DashboardStats {
   totalIngested: number;

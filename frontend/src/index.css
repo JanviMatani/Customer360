@@ -1,72 +1,89 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
-  :root {
-    --canvas: #F4F2ED;
-    --surface: #FFFFFF;
-    --surface-secondary: #ECEAE4;
-    --surface-tertiary: #E5E2DA;
-    --border: #D8D5CD;
-    --border-strong: #BCB8AD;
-    --text: #20252B;
-    --text-muted: #68717C;
-    --accent: #2457A6;
-    --accent-dark: #183B70;
-    --accent-light: #EBF1FA;
-    --success: #287A52;
-    --success-light: #EBF4EF;
-    --warning: #A66A16;
-    --warning-light: #FBF4EB;
-    --danger: #B84242;
-    --danger-light: #F9ECEC;
-  }
-
-  * {
-    border-color: var(--border);
+  html, body, #root {
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
 
   body {
-    background-color: #F4F2ED;
-    color: #20252B;
-    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #EEF1F6;
+    color: #111827;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
   }
 
-  /* Accessible focus rings */
-  button:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible,
-  a:focus-visible {
-    outline: 2px solid #2457A6;
+  * { box-sizing: border-box; }
+
+  button:focus-visible, input:focus-visible, select:focus-visible,
+  textarea:focus-visible, a:focus-visible {
+    outline: 2px solid #1B4FD8;
     outline-offset: 1px;
   }
 }
 
-/* Institutional crisp scrollbar for data-dense tables & panels */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Thin scrollbar for inner panels only */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+/* Sidebar */
+.sidebar-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.45);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.sidebar-nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+}
+.sidebar-nav-item.active {
+  background: rgba(27, 79, 216, 0.25);
+  color: #60A5FA;
+}
+.sidebar-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: #3B82F6;
+  border-radius: 0 2px 2px 0;
 }
 
-::-webkit-scrollbar-track {
-  background: #ECEAE4;
-}
+/* Table rows */
+.trow { transition: background 0.1s; }
+.trow:hover { background: #F3F6FB; }
+.trow-selected { background: #EBF0FD !important; }
 
-::-webkit-scrollbar-thumb {
-  background: #D8D5CD;
-  border-radius: 3px;
-}
+/* Status left borders */
+.status-green { border-left: 3px solid #10B981; }
+.status-amber { border-left: 3px solid #F59E0B; }
+.status-red   { border-left: 3px solid #EF4444; }
+.status-blue  { border-left: 3px solid #3B82F6; }
+.status-gray  { border-left: 3px solid #D1D5DB; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #BCB8AD;
-}
+/* KPI card accent tops */
+.kpi-blue  { border-top: 2px solid #1B4FD8; }
+.kpi-green { border-top: 2px solid #10B981; }
+.kpi-amber { border-top: 2px solid #F59E0B; }
+.kpi-red   { border-top: 2px solid #EF4444; }
+.kpi-violet{ border-top: 2px solid #7C3AED; }
 
-/* Prevent unwanted browser bounce and duplicate scrollbars */
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+.font-id { font-family: 'JetBrains Mono', ui-monospace, monospace; }

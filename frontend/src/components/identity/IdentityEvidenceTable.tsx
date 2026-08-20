@@ -20,29 +20,29 @@ export const IdentityEvidenceTable: React.FC<IdentityEvidenceTableProps> = ({
     switch (result) {
       case 'match':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#EBF4EF] border border-[#A8D3BC] text-[#287A52] text-xs font-semibold">
-            <CheckCircle2 className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+            <CheckCircle2 size={11} />
             <span>MATCH</span>
           </span>
         );
       case 'conflict':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F9ECEC] border border-[#E8B8B8] text-[#B84242] text-xs font-semibold">
-            <XCircle className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-red-50 border border-red-200 text-red-700 text-[10px] font-bold">
+            <XCircle size={11} />
             <span>CONFLICT</span>
           </span>
         );
       case 'partial':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FBF4EB] border border-[#E8CEAB] text-[#A66A16] text-xs font-semibold">
-            <AlertTriangle className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold">
+            <AlertTriangle size={11} />
             <span>{similarity ? `${similarity}% SIMILAR` : 'PARTIAL'}</span>
           </span>
         );
       case 'missing':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#68717C] text-xs font-semibold">
-            <HelpCircle className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-gray-50 border border-gray-200 text-gray-500 text-[10px] font-semibold">
+            <HelpCircle size={11} />
             <span>MISSING</span>
           </span>
         );
@@ -52,13 +52,13 @@ export const IdentityEvidenceTable: React.FC<IdentityEvidenceTableProps> = ({
   const getRowBg = (result: MatchResult) => {
     switch (result) {
       case 'match':
-        return 'hover:bg-[#EBF4EF]/40';
+        return 'hover:bg-[#F0FDF4]/30';
       case 'conflict':
-        return 'bg-[#F9ECEC]/50 hover:bg-[#F9ECEC]/80';
+        return 'bg-[#FEF2F2]/60 hover:bg-[#FEF2F2]';
       case 'partial':
-        return 'bg-[#FBF4EB]/50 hover:bg-[#FBF4EB]/80';
+        return 'bg-[#FFFBEB]/60 hover:bg-[#FFFBEB]';
       default:
-        return 'hover:bg-[#ECEAE4]/50';
+        return 'hover:bg-gray-50';
     }
   };
 
@@ -76,94 +76,94 @@ export const IdentityEvidenceTable: React.FC<IdentityEvidenceTableProps> = ({
   };
 
   return (
-    <div id="identity-evidence-table-container" className="rounded-lg border border-[#D8D5CD] bg-[#FFFFFF] overflow-hidden shadow-xs">
-      <div className="p-4 border-b border-[#D8D5CD] flex items-center justify-between bg-[#ECEAE4]">
+    <div id="identity-evidence-table-container" className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-2xs">
+      <div className="p-3 border-b border-gray-200 flex items-center justify-between bg-gray-50">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#2457A6]" />
-          <h3 className="text-sm font-bold text-[#20252B] uppercase tracking-wider">
-            Identity Evidence & Probabilistic Match Breakdown
+          <div className="w-2.5 h-2.5 rounded-full bg-[#1B4FD8]" />
+          <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+            Identity Resolution Verification Table
           </h3>
         </div>
-        <div className="flex items-center gap-2 text-xs text-[#68717C]">
-          <Info className="w-3.5 h-3.5 text-[#2457A6]" />
-          <span>Explainable scoring based on configurable enterprise weights</span>
+        <div className="flex items-center gap-1.5 text-[11px] text-gray-500 font-medium">
+          <Info size={13} className="text-[#1B4FD8]" />
+          <span>Calculated by Golden Resolution weights</span>
         </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-[#D8D5CD] bg-[#ECEAE4] text-[#68717C] uppercase tracking-wider font-bold">
-              <th className="py-3 px-4">Field Attribute</th>
-              <th className="py-3 px-4">Primary Silo Value</th>
-              <th className="py-3 px-4">Matched Silo Value</th>
-              <th className="py-3 px-4 text-center font-mono">Weight (Pts)</th>
-              <th className="py-3 px-4 text-center">Engine Result</th>
-              <th className="py-3 px-4">Verification Rationale</th>
+            <tr className="border-b border-gray-200 bg-gray-50/50 text-gray-500 uppercase tracking-wider font-bold">
+              <th className="py-2.5 px-4">Field Attribute</th>
+              <th className="py-2.5 px-4">Primary Value</th>
+              <th className="py-2.5 px-4">Secondary value</th>
+              <th className="py-2.5 px-4 text-center font-mono">Weight</th>
+              <th className="py-2.5 px-4 text-center">Engine Result</th>
+              <th className="py-2.5 px-4">Verification Rationale</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#D8D5CD] text-[#20252B] font-sans">
+          <tbody className="divide-y divide-gray-100 text-gray-700 font-sans">
             {evidence.map((row, idx) => {
               const sensitive = isSensitiveField(row.field);
               const fieldType = getFieldType(row.field);
 
               return (
                 <tr key={idx} className={`transition-colors ${getRowBg(row.result)}`}>
-                  <td className="py-3 px-4 font-semibold text-[#20252B]">
+                  <td className="py-2.5 px-4 font-semibold text-gray-900">
                     {row.field}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-2.5 px-4">
                     {sensitive ? (
                       <MaskedField value={row.valueA} type={fieldType} />
                     ) : (
-                      <span className="font-mono text-[#20252B]">{row.valueA || '—'}</span>
+                      <span className="font-mono text-gray-900">{row.valueA || '—'}</span>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-2.5 px-4">
                     {sensitive ? (
                       <MaskedField value={row.valueB} type={fieldType} />
                     ) : (
-                      <span className="font-mono text-[#20252B]">{row.valueB || '—'}</span>
+                      <span className="font-mono text-gray-900">{row.valueB || '—'}</span>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-center font-mono font-bold text-[#2457A6]">
-                    {row.weight}
+                  <td className="py-2.5 px-4 text-center font-mono font-bold text-[#1B4FD8]">
+                    {row.weight} pts
                   </td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-2.5 px-4 text-center">
                     {getResultBadge(row.result, row.similarity)}
                   </td>
-                  <td className="py-3 px-4 text-[#68717C] text-[11px] leading-relaxed">
-                    {row.explanation || (row.result === 'match' ? 'Verified exact match' : 'Evaluated by rules')}
+                  <td className="py-2.5 px-4 text-gray-500 text-[11px] leading-relaxed">
+                    {row.explanation || (row.result === 'match' ? 'Exact PII mapping' : 'Matching rule evaluated')}
                   </td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-[#D8D5CD] bg-[#ECEAE4] font-bold">
-              <td colSpan={3} className="py-3.5 px-4 text-[#20252B] uppercase tracking-wider text-xs font-bold">
-                Total Weighted Confidence Score
+            <tr className="border-t-2 border-gray-200 bg-gray-50 font-bold">
+              <td colSpan={3} className="py-3 px-4 text-gray-800 uppercase tracking-wider text-[11px] font-bold">
+                Overall Resolution Confidence
               </td>
-              <td className="py-3.5 px-4 text-center font-mono text-[#20252B] text-xs">
+              <td className="py-3 px-4 text-center font-mono text-gray-800">
                 100 pts
               </td>
-              <td className="py-3.5 px-4 text-center">
-                <span className="font-mono text-base font-black text-[#2457A6]">
+              <td className="py-3 px-4 text-center">
+                <span className="font-mono text-sm font-extrabold text-[#1B4FD8]">
                   {overallConfidence}%
                 </span>
               </td>
-              <td className="py-3.5 px-4 text-xs text-[#68717C]">
+              <td className="py-3 px-4 text-[11px] text-gray-500">
                 {overallConfidence >= autoMergeThreshold ? (
-                  <span className="text-[#287A52] font-semibold">
-                    ✓ Threshold Met (≥{autoMergeThreshold}%) → Auto Merged into Golden Record
+                  <span className="text-emerald-700 font-bold">
+                    ✓ Clean Auto-Merge Met (≥{autoMergeThreshold}%)
                   </span>
                 ) : overallConfidence >= manualReviewThreshold ? (
-                  <span className="text-[#A66A16] font-semibold">
-                    ⚠ In Review Range ({manualReviewThreshold}-{autoMergeThreshold - 1}%) → Routed to Compliance Queue
+                  <span className="text-amber-700 font-bold">
+                    ⚠ In Review Range ({manualReviewThreshold}-{autoMergeThreshold - 1}%)
                   </span>
                 ) : (
-                  <span className="text-[#B84242] font-semibold">
-                    ✗ Below Threshold (&lt;{manualReviewThreshold}%) → Maintained as Separate Legal Entities
+                  <span className="text-red-700 font-bold">
+                    ✗ Below Threshold (&lt;{manualReviewThreshold}%)
                   </span>
                 )}
               </td>

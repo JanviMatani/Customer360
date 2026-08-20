@@ -25,21 +25,21 @@ export const TabbedHeaderLayout: React.FC<TabbedHeaderLayoutProps> = ({
   children,
 }) => {
   const badgeClasses = {
-    default: 'bg-[#ECEAE4] text-[#20252B] border-[#D8D5CD]',
-    blue: 'bg-[#EBF1FA] text-[#2457A6] border-[#BCD1F0]',
-    amber: 'bg-[#FBF4EB] text-[#A66A16] border-[#E8CEAB]',
-    crimson: 'bg-[#F9ECEC] text-[#B84242] border-[#E8B8B8]',
-    green: 'bg-[#EBF4EF] text-[#287A52] border-[#A8D3BC]',
+    default: 'bg-gray-100 text-gray-700 border-gray-300',
+    blue: 'bg-blue-50 text-[#1B4FD8] border-blue-200',
+    amber: 'bg-amber-50 text-amber-800 border-amber-200',
+    crimson: 'bg-red-50 text-red-700 border-red-200',
+    green: 'bg-emerald-50 text-emerald-800 border-emerald-200',
   };
 
   return (
-    <div className="space-y-4">
+    <div className="h-full flex flex-col overflow-hidden gap-3">
       {/* Top Persistent Header Hero */}
-      <div className="bg-[#FFFFFF] border border-[#D8D5CD] rounded-lg shadow-xs overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-2xs overflow-hidden shrink-0 flex flex-col">
         {header}
 
         {/* Horizontal Tab Navigation Bar */}
-        <div className="flex items-center gap-1 px-4 border-t border-[#D8D5CD] bg-[#ECEAE4]/60 overflow-x-auto select-none">
+        <div className="flex items-center gap-1 px-4 border-t border-gray-200 bg-gray-50 overflow-x-auto select-none">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -50,13 +50,13 @@ export const TabbedHeaderLayout: React.FC<TabbedHeaderLayoutProps> = ({
                 key={tab.id}
                 id={`tab-${tab.id}`}
                 onClick={() => onTabChange(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold whitespace-nowrap transition-all border-b-2 cursor-pointer ${
+                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold whitespace-nowrap transition-all border-b-2 cursor-pointer ${
                   isActive
-                    ? 'border-[#2457A6] text-[#2457A6] bg-[#FFFFFF]'
-                    : 'border-transparent text-[#68717C] hover:text-[#20252B] hover:bg-[#FFFFFF]/50'
+                    ? 'border-[#1B4FD8] text-[#1B4FD8] bg-white'
+                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:bg-gray-100/50'
                 }`}
               >
-                {Icon && <Icon className={`w-4 h-4 ${isActive ? 'text-[#2457A6]' : 'text-[#68717C]'}`} />}
+                {Icon && <Icon size={14} className={isActive ? 'text-[#1B4FD8]' : 'text-gray-400'} />}
                 <span>{tab.label}</span>
 
                 {tab.badge !== undefined && tab.badge !== null && (
@@ -72,8 +72,10 @@ export const TabbedHeaderLayout: React.FC<TabbedHeaderLayoutProps> = ({
         </div>
       </div>
 
-      {/* Dynamic Tab Body Container */}
-      <div className="min-h-[400px]">{children}</div>
+      {/* Dynamic Tab Body Container - strictly locked to flex-1 viewport scrolling */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {children}
+      </div>
     </div>
   );
 };

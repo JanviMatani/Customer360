@@ -1,26 +1,18 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft,
   ShieldCheck,
   Sparkles,
   Building2,
-  Calendar,
-  MapPin,
-  Mail,
-  Phone,
   CreditCard,
-  Layers,
   ChevronRight,
   ChevronDown,
   TrendingUp,
-  FileText,
   AlertTriangle,
   Database,
   History,
   CheckCircle2,
   Plus,
-  Send,
   Eye,
   MoreVertical,
   Filter,
@@ -32,7 +24,6 @@ import {
   HelpCircle,
   ExternalLink,
   ShieldAlert,
-  ArrowUpRight,
 } from 'lucide-react';
 import { useCustomer, useCustomerOpportunities } from '../hooks/useCustomers';
 import { useAuditLogs } from '../hooks/useAudit';
@@ -43,9 +34,8 @@ import { ProductStrip } from '../components/opportunity/ProductStrip';
 import { IdentityEvidenceTable } from '../components/identity/IdentityEvidenceTable';
 import { AttributeConflictCard } from '../components/identity/AttributeConflictCard';
 import { SourceLineagePanel } from '../components/identity/SourceLineagePanel';
-import { OpportunityCard } from '../components/opportunity/OpportunityCard';
 import { TabbedHeaderLayout, TabItem } from '../components/layout/TabbedHeaderLayout';
-import { formatCurrency, formatDate } from '../lib/utils';
+import { formatCurrency } from '../lib/utils';
 import { useAuthStore } from '../store/authStore';
 
 export const CustomerProfilePage: React.FC = () => {
@@ -76,8 +66,8 @@ export const CustomerProfilePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="p-12 text-center text-[#68717C] font-mono text-xs">
-        Loading unified Golden Customer Profile...
+      <div className="h-full flex items-center justify-center text-xs font-mono text-gray-500">
+        Loading Golden Customer profile telemetry...
       </div>
     );
   }
@@ -85,12 +75,12 @@ export const CustomerProfilePage: React.FC = () => {
   if (error || !customer) {
     return (
       <div className="p-8 text-center space-y-4">
-        <div className="text-[#B84242] font-bold text-base">
+        <div className="text-red-600 font-bold text-base">
           Customer Profile Not Found ({goldenId})
         </div>
         <button
           onClick={() => navigate('/customers')}
-          className="px-4 py-2 rounded-md bg-[#ECEAE4] hover:bg-[#D8D5CD] text-[#20252B] text-xs font-semibold cursor-pointer border border-[#D8D5CD]"
+          className="px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 text-gray-800 text-xs font-semibold cursor-pointer"
         >
           Back to Customer Registry
         </button>
@@ -104,13 +94,6 @@ export const CustomerProfilePage: React.FC = () => {
   const conflicts = customer.attributeConflicts || customer.conflicts || [];
   const evidence = customer.evidence || [];
   const lineage = customer.sourceLineage || [];
-
-  const demoQuickCustomers = [
-    { id: 'CUST-001', name: 'Amit Kumar', tag: 'Clean Auto-Merge' },
-    { id: 'CUST-002', name: 'Priya Nair', tag: 'HNI Multi-Silo' },
-    { id: 'CUST-003', name: 'Rajesh Patel', tag: 'City Override' },
-    { id: 'CUST-004', name: 'Rahul Sharma', tag: '84% In Review' },
-  ];
 
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,21 +123,21 @@ export const CustomerProfilePage: React.FC = () => {
       id: 'conflicts',
       label: 'Conflicts',
       icon: AlertTriangle,
-      badge: 5,
+      badge: conflicts.length || 5,
       badgeTone: 'amber',
     },
     {
       id: 'opportunities',
       label: 'Opportunities',
       icon: Sparkles,
-      badge: 5,
+      badge: opportunities.length || 5,
       badgeTone: 'green',
     },
     {
       id: 'lineage',
       label: 'Source Lineage',
       icon: Database,
-      badge: 3,
+      badge: lineage.length || 3,
       badgeTone: 'default',
     },
     {
@@ -403,111 +386,92 @@ export const CustomerProfilePage: React.FC = () => {
   ];
 
   const profileHeader = (
-    <div className="p-6 space-y-4">
+    <div className="p-4 space-y-4">
       {/* Top Breadcrumb & Action Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#D8D5CD] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-150 pb-3">
         <div>
-          <div className="text-[11px] text-[#68717C] flex items-center gap-1.5 font-medium">
-            <span className="hover:underline cursor-pointer" onClick={() => navigate('/customers')}>Customers</span>
+          <div className="text-[10px] text-gray-400 flex items-center gap-1 font-bold uppercase tracking-wider">
+            <span className="hover:underline cursor-pointer" onClick={() => navigate('/customers')}>Registry</span>
             <span>&gt;</span>
-            <span className="font-mono text-[#2457A6]">{goldenId}</span>
+            <span className="font-mono text-[#1B4FD8]">{goldenId}</span>
             <span>&gt;</span>
-            <span className="capitalize text-[#20252B] font-semibold">
+            <span className="text-gray-700">
               {tabs.find((t) => t.id === activeTab)?.label || 'Overview'}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-[#20252B] tracking-tight mt-1">
-            Customer 360 — {tabs.find((t) => t.id === activeTab)?.label || 'Overview'}
+          <h2 className="text-base font-bold text-gray-900 leading-tight mt-1">
+            Golden Dossier: {customer.name}
           </h2>
-          <p className="text-xs text-[#68717C] mt-0.5">
-            {activeTab === 'overview' && 'Unified golden view of the customer and relationship summary.'}
-            {activeTab === 'evidence' && 'View and validate all identity documents and evidence linked to this customer.'}
-            {activeTab === 'conflicts' && 'View potential matches, overlaps and conflicts detected for this customer.'}
-            {activeTab === 'opportunities' && 'Next-best opportunities identified for this customer based on profile, behavior and product affinity.'}
-            {activeTab === 'lineage' && 'Track the origin of customer data and how it flows across systems to build the golden record.'}
-            {activeTab === 'notes' && 'Record relationship notes, advisory logs and review the immutable audit trail.'}
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/review')}
-            className="px-3.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs font-semibold cursor-pointer shadow-2xs"
+            className="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold cursor-pointer shadow-2xs"
           >
-            View in Review Queue
+            Review Status
           </button>
           <button
             onClick={() => navigate('/customers')}
-            className="px-3.5 py-1.5 rounded-md bg-[#2457A6] hover:bg-[#183B70] text-white text-xs font-semibold cursor-pointer shadow-2xs flex items-center gap-1"
+            className="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold cursor-pointer shadow-2xs"
           >
-            <span>Edit / Open Details</span>
-            <ChevronDown className="w-3.5 h-3.5" />
+            Back to Registry
           </button>
         </div>
       </div>
 
       {/* Customer Hero Summary Bar */}
-      <div className="p-4 rounded-xl bg-[#FAF9F6] border border-[#D8D5CD] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+      <div className="p-3.5 rounded-lg bg-gray-50 border border-gray-200 grid grid-cols-12 gap-4 items-center">
         {/* Col 1: Identity Avatar & Name */}
-        <div className="lg:col-span-2 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-full bg-[#EBF1FA] text-[#2457A6] border border-[#BCD1F0] flex items-center justify-center font-bold text-lg shrink-0">
+        <div className="col-span-5 flex items-center gap-3">
+          <div className="w-10 h-10 rounded bg-blue-50 text-[#1B4FD8] border border-blue-200 flex items-center justify-center font-bold text-base shrink-0">
             {customer.name?.charAt(0) || 'R'}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-[#20252B] tracking-tight">{customer.name}</h3>
-              <span className="px-2 py-0.5 rounded-full bg-[#EBF4EF] text-[#287A52] border border-[#A8D3BC] text-[10px] font-bold">
-                Active
+              <h3 className="text-sm font-bold text-gray-900">{customer.name}</h3>
+              <span className="px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[9px] font-bold">
+                ACTIVE PROFILE
               </span>
             </div>
-            <div className="text-xs text-[#68717C] flex items-center gap-2 mt-0.5">
-              <span>Golden Customer ID:</span>
-              <span className="font-mono font-bold text-[#20252B]">{customer.goldenId}</span>
-            </div>
-            <div className="text-[11px] text-[#68717C] flex items-center gap-3 mt-1 font-mono">
-              <span>Primary Mobile: {customer.mobile || '98765 43210'}</span>
+            <div className="text-[10px] text-gray-500 font-mono mt-0.5 flex gap-3">
+              <span>Mobile: {customer.mobile || '98765 43210'}</span>
               <span>•</span>
-              <span>Primary PAN: {customer.pan || 'ABCDE1234F'}</span>
+              <span>PAN: {customer.pan || 'ABCDE1234F'}</span>
             </div>
           </div>
         </div>
 
         {/* Col 2: Identity Confidence */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#68717C] font-medium">Identity Confidence</span>
-            <span className="font-mono font-bold text-base text-[#20252B]">{confidenceScore}%</span>
+        <div className="col-span-3 space-y-1">
+          <div className="flex items-center justify-between text-[11px] font-semibold text-gray-600">
+            <span>Identity Matching</span>
+            <span className="font-mono text-gray-900 font-bold">{confidenceScore}% match</span>
           </div>
-          <div className="w-full h-2 rounded-full bg-[#ECEAE4] overflow-hidden">
+          <div className="w-full h-1.5 rounded bg-gray-250 overflow-hidden border border-gray-200">
             <div
-              className="h-full rounded-full bg-[#287A52]"
+              className="h-full rounded-full bg-emerald-600"
               style={{ width: `${confidenceScore}%` }}
             />
           </div>
-          <span className="text-[10px] font-semibold text-[#287A52] block">High Confidence</span>
         </div>
 
         {/* Col 3: Sources Linked & Relationship Value */}
-        <div className="space-y-1">
-          <div className="text-xs text-[#68717C] font-medium">Sources Linked</div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono font-bold text-base text-[#20252B]">3</span>
-            <div className="flex items-center gap-1">
-              <span className="px-1.5 py-0.5 rounded bg-[#EBF1FA] text-[#2457A6] font-mono text-[10px] font-bold border border-[#BCD1F0]">EQ</span>
-              <span className="px-1.5 py-0.5 rounded bg-[#F2EDFA] text-[#6A3BB8] font-mono text-[10px] font-bold border border-[#D6C7F0]">MF</span>
-              <span className="px-1.5 py-0.5 rounded bg-[#EBF4EF] text-[#287A52] font-mono text-[10px] font-bold border border-[#A8D3BC]">LN</span>
-            </div>
+        <div className="col-span-2 space-y-0.5">
+          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Silo Links</div>
+          <div className="flex items-center gap-1.5">
+            <span className="px-1 py-0.2 rounded bg-blue-50 text-[#1B4FD8] font-mono text-[9px] font-bold border border-blue-200">EQ</span>
+            <span className="px-1 py-0.2 rounded bg-indigo-50 text-indigo-700 font-mono text-[9px] font-bold border border-indigo-200">MF</span>
+            <span className="px-1 py-0.2 rounded bg-emerald-50 text-emerald-800 font-mono text-[9px] font-bold border border-emerald-200">LN</span>
           </div>
-          <div className="text-[10px] text-[#68717C] font-mono">EQ, MF, LN</div>
         </div>
 
         {/* Col 4: Relationship Value & Customer Since */}
-        <div className="space-y-1">
-          <div className="text-xs text-[#68717C] font-medium">Relationship Value</div>
-          <div className="font-mono text-base font-bold text-[#287A52]">
+        <div className="col-span-2 space-y-0.5 text-right">
+          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Holdings TRV</div>
+          <div className="font-mono text-xs font-bold text-emerald-800">
             {formatCurrency(customer.totalRelationshipValue || 1245000)}
           </div>
-          <div className="text-[10px] text-[#68717C]">Total Value</div>
         </div>
       </div>
     </div>
@@ -520,422 +484,171 @@ export const CustomerProfilePage: React.FC = () => {
       activeTab={activeTab}
       onTabChange={setActiveTab}
     >
-      {/* ========================================================
-          TAB 1: OVERVIEW (Matching overview.jpg)
-         ======================================================== */}
+      {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          {/* Top Product Portfolio Strip & Asset Allocation */}
+        <div className="space-y-4 animate-in fade-in duration-150">
           <ProductStrip holdings={holdings} totalRelationshipValue={customer.totalRelationshipValue} />
 
-          {/* Row 1: Product Holdings | Relationship Value Breakdown | Key Identity Summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-12 gap-4">
             {/* Card 1: Product Holdings */}
-            <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col justify-between space-y-4">
+            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col justify-between space-y-3">
               <div>
-                <div className="flex items-center gap-2 border-b border-[#D8D5CD] pb-2">
-                  <CreditCard className="w-4 h-4 text-[#2457A6]" />
-                  <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                    Product Holdings
+                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
+                  <CreditCard size={14} className="text-[#1B4FD8]" />
+                  <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                    Holdings Details
                   </h3>
                 </div>
 
-                <div className="divide-y divide-[#ECEAE4] text-xs mt-2">
-                  <div className="grid grid-cols-4 py-2 font-bold text-[10px] uppercase tracking-wider text-[#68717C]">
-                    <span>Product Type</span>
-                    <span>Account / Policy</span>
+                <div className="divide-y divide-gray-50 text-[11px] mt-2">
+                  <div className="grid grid-cols-4 py-1.5 font-bold uppercase tracking-wider text-gray-400 text-[9px]">
+                    <span className="col-span-2">Product</span>
                     <span>Status</span>
-                    <span className="text-right">Value</span>
+                    <span className="text-right">Balance</span>
                   </div>
-                  <div className="grid grid-cols-4 py-2 text-[#20252B] items-center">
-                    <span className="font-medium">Savings Account</span>
-                    <span className="font-mono text-[11px] text-[#68717C]">EQSA0001234</span>
-                    <span className="text-[#287A52] font-semibold text-[11px]">● Active</span>
-                    <span className="font-mono font-bold text-right">₹2,15,000</span>
+                  <div className="grid grid-cols-4 py-1.5 items-center">
+                    <span className="col-span-2 font-bold text-gray-900">Savings Account</span>
+                    <span className="text-emerald-700 font-bold">● Active</span>
+                    <span className="font-mono text-right font-semibold">₹2,15,000</span>
                   </div>
-                  <div className="grid grid-cols-4 py-2 text-[#20252B] items-center">
-                    <span className="font-medium">Current Account</span>
-                    <span className="font-mono text-[11px] text-[#68717C]">EQCA0005678</span>
-                    <span className="text-[#287A52] font-semibold text-[11px]">● Active</span>
-                    <span className="font-mono font-bold text-right">₹1,10,000</span>
+                  <div className="grid grid-cols-4 py-1.5 items-center">
+                    <span className="col-span-2 font-bold text-gray-900">Current Account</span>
+                    <span className="text-emerald-700 font-bold">● Active</span>
+                    <span className="font-mono text-right font-semibold">₹1,10,000</span>
                   </div>
-                  <div className="grid grid-cols-4 py-2 text-[#20252B] items-center">
-                    <span className="font-medium">Mutual Fund</span>
-                    <span className="font-mono text-[11px] text-[#68717C]">MFIN12345678</span>
-                    <span className="text-[#287A52] font-semibold text-[11px]">● Active</span>
-                    <span className="font-mono font-bold text-right">₹6,75,000</span>
+                  <div className="grid grid-cols-4 py-1.5 items-center">
+                    <span className="col-span-2 font-bold text-gray-900">Mutual Fund</span>
+                    <span className="text-emerald-700 font-bold">● Active</span>
+                    <span className="font-mono text-right font-semibold">₹6,75,000</span>
                   </div>
-                  <div className="grid grid-cols-4 py-2 text-[#20252B] items-center">
-                    <span className="font-medium">Term Insurance</span>
-                    <span className="font-mono text-[11px] text-[#68717C]">LNINS876543</span>
-                    <span className="text-[#287A52] font-semibold text-[11px]">● Active</span>
-                    <span className="font-mono font-bold text-right">₹2,45,000</span>
+                  <div className="grid grid-cols-4 py-1.5 items-center">
+                    <span className="col-span-2 font-bold text-gray-900">Term Insurance</span>
+                    <span className="text-emerald-700 font-bold">● Active</span>
+                    <span className="font-mono text-right font-semibold">₹2,45,000</span>
                   </div>
                 </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#D8D5CD]">
-                <button
-                  type="button"
-                  className="text-xs text-[#2457A6] hover:underline font-semibold flex items-center justify-between w-full cursor-pointer"
-                >
-                  <span>View all holdings</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
 
             {/* Card 2: Relationship Value Breakdown */}
-            <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col justify-between space-y-4">
+            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col justify-between space-y-3">
               <div>
-                <div className="flex items-center gap-2 border-b border-[#D8D5CD] pb-2">
-                  <TrendingUp className="w-4 h-4 text-[#2457A6]" />
-                  <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                    Relationship Value Breakdown
+                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
+                  <TrendingUp size={14} className="text-[#1B4FD8]" />
+                  <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                    Asset Allocation
                   </h3>
                 </div>
 
-                <div className="flex items-center gap-4 mt-4">
-                  {/* Donut Chart visual representation */}
-                  <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
+                <div className="flex items-center gap-4 mt-3">
+                  <div className="relative w-20 h-20 shrink-0 flex items-center justify-center">
                     <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                       <path
-                        className="text-[#2457A6]"
+                        className="text-[#1B4FD8]"
                         strokeDasharray="54, 100"
-                        strokeWidth="5"
+                        strokeWidth="4"
                         stroke="currentColor"
                         fill="none"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
                       <path
-                        className="text-[#287A52]"
+                        className="text-[#10B981]"
                         strokeDasharray="17, 100"
                         strokeDashoffset="-54"
-                        strokeWidth="5"
+                        strokeWidth="4"
                         stroke="currentColor"
                         fill="none"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
                       <path
-                        className="text-[#A66A16]"
+                        className="text-[#F59E0B]"
                         strokeDasharray="20, 100"
                         strokeDashoffset="-71"
-                        strokeWidth="5"
+                        strokeWidth="4"
                         stroke="currentColor"
                         fill="none"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
                       <path
-                        className="text-[#6A3BB8]"
+                        className="text-[#6366F1]"
                         strokeDasharray="9, 100"
                         strokeDashoffset="-91"
-                        strokeWidth="5"
+                        strokeWidth="4"
                         stroke="currentColor"
                         fill="none"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
                     </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="font-mono text-xs font-bold text-[#20252B]">₹12,45,000</span>
-                      <span className="text-[8px] text-[#68717C] uppercase">Total Value</span>
-                    </div>
                   </div>
 
-                  {/* Legend list */}
-                  <div className="space-y-1 text-xs flex-1">
+                  <div className="space-y-1 text-[10px] flex-1 font-semibold text-gray-700">
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-[11px] text-[#20252B]">
-                        <span className="w-2 h-2 rounded-full bg-[#2457A6]" />
+                      <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#1B4FD8]" />
                         <span>Mutual Funds</span>
                       </span>
-                      <span className="font-mono text-[11px] text-[#68717C]">54% (₹6.75L)</span>
+                      <span className="font-mono text-gray-500">54%</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-[11px] text-[#20252B]">
-                        <span className="w-2 h-2 rounded-full bg-[#287A52]" />
+                      <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
                         <span>Savings Accounts</span>
                       </span>
-                      <span className="font-mono text-[11px] text-[#68717C]">17% (₹2.15L)</span>
+                      <span className="font-mono text-gray-500">17%</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-[11px] text-[#20252B]">
-                        <span className="w-2 h-2 rounded-full bg-[#A66A16]" />
+                      <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
                         <span>Insurance</span>
                       </span>
-                      <span className="font-mono text-[11px] text-[#68717C]">20% (₹2.45L)</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-[11px] text-[#20252B]">
-                        <span className="w-2 h-2 rounded-full bg-[#6A3BB8]" />
-                        <span>Current Account</span>
-                      </span>
-                      <span className="font-mono text-[11px] text-[#68717C]">9% (₹1.10L)</span>
+                      <span className="font-mono text-gray-500">20%</span>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#D8D5CD]">
-                <button
-                  type="button"
-                  className="text-xs text-[#2457A6] hover:underline font-semibold flex items-center justify-between w-full cursor-pointer"
-                >
-                  <span>View value trend</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
 
             {/* Card 3: Key Identity Summary */}
-            <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col justify-between space-y-4">
+            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col justify-between space-y-3">
               <div>
-                <div className="flex items-center gap-2 border-b border-[#D8D5CD] pb-2">
-                  <ShieldCheck className="w-4 h-4 text-[#2457A6]" />
-                  <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                    Key Identity Summary
+                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
+                  <ShieldCheck size={14} className="text-[#1B4FD8]" />
+                  <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                    Core Attributes Summary
                   </h3>
                 </div>
 
-                <div className="space-y-2 text-xs divide-y divide-[#ECEAE4] mt-2">
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-[#68717C]">Primary Name</span>
-                    <span className="font-bold text-[#20252B]">{customer.name}</span>
+                <div className="space-y-1.5 text-[11px] mt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Primary Name:</span>
+                    <span className="font-bold text-gray-900">{customer.name}</span>
                   </div>
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-[#68717C]">Date of Birth</span>
-                    <span className="font-mono text-[#20252B]">14 Feb 1990</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Primary PAN:</span>
+                    <span className="font-mono font-bold text-gray-900">{customer.pan}</span>
                   </div>
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-[#68717C]">PAN</span>
-                    <span className="font-mono font-bold text-[#2457A6]">ABCDE1234F</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Primary Mobile:</span>
+                    <span className="font-mono font-bold text-gray-900">{customer.mobile}</span>
                   </div>
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-[#68717C]">Primary Mobile</span>
-                    <span className="font-mono text-[#20252B]">98765 43210</span>
-                  </div>
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-[#68717C]">Primary Email</span>
-                    <span className="font-mono text-[#20252B]">rahul.sharma@email.com</span>
-                  </div>
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-[#68717C]">Address (Primary)</span>
-                    <span className="text-[#20252B] font-medium truncate max-w-[170px]">12, Green Park, New Delhi</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Primary Email:</span>
+                    <span className="font-mono font-bold text-gray-900">{customer.email}</span>
                   </div>
                 </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#D8D5CD]">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('evidence')}
-                  className="text-xs text-[#2457A6] hover:underline font-semibold flex items-center justify-between w-full cursor-pointer"
-                >
-                  <span>View full identity</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Row 2: Source Systems (3) | Recent Activity | Next Best Opportunities (Top 2) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Card 4: Source Systems (3) */}
-            <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col justify-between space-y-4">
-              <div>
-                <div className="flex items-center gap-2 border-b border-[#D8D5CD] pb-2">
-                  <Database className="w-4 h-4 text-[#2457A6]" />
-                  <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                    Source Systems (3)
-                  </h3>
-                </div>
-
-                <div className="space-y-3 mt-3">
-                  <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#D8D5CD] space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded bg-[#EBF1FA] text-[#2457A6] font-mono text-[10px] font-bold flex items-center justify-center border border-[#BCD1F0]">EQ</span>
-                      <span className="text-xs font-bold text-[#20252B]">Equity Core Banking</span>
-                    </div>
-                    <div className="text-[10px] text-[#68717C] flex items-center justify-between font-mono">
-                      <span>Linked: 12 Aug 2019</span>
-                      <span>Updated: 20 May 2026</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#D8D5CD] space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded bg-[#F2EDFA] text-[#6A3BB8] font-mono text-[10px] font-bold flex items-center justify-center border border-[#D6C7F0]">MF</span>
-                      <span className="text-xs font-bold text-[#20252B]">Mutual Fund System</span>
-                    </div>
-                    <div className="text-[10px] text-[#68717C] flex items-center justify-between font-mono">
-                      <span>Linked: 05 Jan 2021</span>
-                      <span>Updated: 18 May 2026</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#D8D5CD] space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded bg-[#EBF4EF] text-[#287A52] font-mono text-[10px] font-bold flex items-center justify-center border border-[#A8D3BC]">LN</span>
-                      <span className="text-xs font-bold text-[#20252B]">Loan & Insurance System</span>
-                    </div>
-                    <div className="text-[10px] text-[#68717C] flex items-center justify-between font-mono">
-                      <span>Linked: 22 Mar 2022</span>
-                      <span>Updated: 19 May 2026</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#D8D5CD]">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('lineage')}
-                  className="text-xs text-[#2457A6] hover:underline font-semibold flex items-center justify-between w-full cursor-pointer"
-                >
-                  <span>View all sources</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Card 5: Recent Activity */}
-            <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col justify-between space-y-4">
-              <div>
-                <div className="flex items-center gap-2 border-b border-[#D8D5CD] pb-2">
-                  <History className="w-4 h-4 text-[#2457A6]" />
-                  <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                    Recent Activity
-                  </h3>
-                </div>
-
-                <div className="space-y-3 mt-3 text-xs">
-                  <div className="flex items-start gap-2.5 pb-2 border-b border-[#ECEAE4]">
-                    <span className="w-2 h-2 rounded-full bg-[#287A52] mt-1 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[#20252B]">Auto-merge completed with MF system</div>
-                      <div className="text-[10px] text-[#68717C] font-mono">20 May 2026, 10:15 AM</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5 pb-2 border-b border-[#ECEAE4]">
-                    <span className="w-2 h-2 rounded-full bg-[#2457A6] mt-1 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[#20252B]">Email updated from LN system</div>
-                      <div className="text-[10px] text-[#68717C] font-mono">18 May 2026, 04:22 PM</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5 pb-2 border-b border-[#ECEAE4]">
-                    <span className="w-2 h-2 rounded-full bg-[#A66A16] mt-1 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[#20252B]">Address verified from EQ system</div>
-                      <div className="text-[10px] text-[#68717C] font-mono">17 May 2026, 11:08 AM</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-[#6A3BB8] mt-1 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[#20252B]">Opportunity recommended: ULIP</div>
-                      <div className="text-[10px] text-[#68717C] font-mono">16 May 2026, 09:30 AM</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#D8D5CD]">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('notes')}
-                  className="text-xs text-[#2457A6] hover:underline font-semibold flex items-center justify-between w-full cursor-pointer"
-                >
-                  <span>View all activity</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Card 6: Next Best Opportunities (Top 2) */}
-            <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col justify-between space-y-4">
-              <div>
-                <div className="flex items-center gap-2 border-b border-[#D8D5CD] pb-2">
-                  <Sparkles className="w-4 h-4 text-[#2457A6]" />
-                  <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                    Next Best Opportunities (Top 2)
-                  </h3>
-                </div>
-
-                <div className="space-y-3 mt-3">
-                  <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#D8D5CD] space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <ShieldCheck className="w-4 h-4 text-[#287A52]" />
-                        <span className="text-xs font-bold text-[#20252B]">Term Insurance (Top-up)</span>
-                      </div>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#EBF4EF] text-[#287A52] font-bold border border-[#A8D3BC]">
-                        High
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#68717C]">Score: <strong className="text-[#20252B]">92%</strong></span>
-                      <span className="text-[#287A52] font-bold">₹1,20,000</span>
-                    </div>
-                    <button
-                      onClick={() => setActiveTab('opportunities')}
-                      className="w-full py-1 text-center rounded bg-[#FFFFFF] border border-[#D8D5CD] text-[11px] font-semibold text-[#2457A6] hover:bg-[#ECEAE4] cursor-pointer"
-                    >
-                      View Opportunity
-                    </button>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#D8D5CD] space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <TrendingUp className="w-4 h-4 text-[#2457A6]" />
-                        <span className="text-xs font-bold text-[#20252B]">SIP in Equity Funds</span>
-                      </div>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#FBF4EB] text-[#A66A16] font-bold border border-[#E8CEAB]">
-                        Medium
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#68717C]">Score: <strong className="text-[#20252B]">78%</strong></span>
-                      <span className="text-[#287A52] font-bold">₹75,000</span>
-                    </div>
-                    <button
-                      onClick={() => setActiveTab('opportunities')}
-                      className="w-full py-1 text-center rounded bg-[#FFFFFF] border border-[#D8D5CD] text-[11px] font-semibold text-[#2457A6] hover:bg-[#ECEAE4] cursor-pointer"
-                    >
-                      View Opportunity
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#D8D5CD]">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('opportunities')}
-                  className="text-xs text-[#2457A6] hover:underline font-semibold flex items-center justify-between w-full cursor-pointer"
-                >
-                  <span>View all opportunities</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ========================================================
-          TAB 2: IDENTITY EVIDENCE (Matching identity_evidence.jpg)
-         ======================================================== */}
+      {/* TAB 2: IDENTITY EVIDENCE */}
       {activeTab === 'evidence' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in duration-200 items-start">
-          {/* Left 3 Cols: Evidence Categories Sidebar */}
-          <div className="lg:col-span-3 space-y-4">
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs space-y-3">
-              <h4 className="text-xs font-bold text-[#20252B] uppercase tracking-wider border-b border-[#D8D5CD] pb-2">
-                Evidence Categories
+        <div className="grid grid-cols-12 gap-4 animate-in fade-in duration-150 items-start">
+          <div className="col-span-3 space-y-3">
+            <div className="p-3 rounded-lg bg-white border border-gray-200 shadow-2xs space-y-2">
+              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-1.5">
+                Verification Filter
               </h4>
               <div className="space-y-1 text-xs">
                 {[
@@ -948,613 +661,270 @@ export const CustomerProfilePage: React.FC = () => {
                   <button
                     key={cat.id}
                     onClick={() => setEvidenceCategory(cat.id)}
-                    className={`w-full flex items-center justify-between p-2 rounded-md font-medium transition-colors cursor-pointer ${
+                    className={`w-full flex items-center justify-between p-2 rounded text-xs font-semibold transition-colors cursor-pointer ${
                       evidenceCategory === cat.id
-                        ? 'bg-[#EBF1FA] text-[#2457A6] font-bold border border-[#BCD1F0]'
-                        : 'text-[#20252B] hover:bg-[#ECEAE4]'
+                        ? 'bg-blue-50 text-[#1B4FD8] font-bold border border-blue-200'
+                        : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >
                     <span>{cat.label}</span>
-                    <span className="font-mono text-[11px] text-[#68717C]">{cat.count}</span>
+                    <span className="font-mono text-[10px] text-gray-400">{cat.count}</span>
                   </button>
                 ))}
               </div>
             </div>
-
-            {/* Quick Actions */}
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs space-y-2">
-              <h4 className="text-xs font-bold text-[#20252B] uppercase tracking-wider border-b border-[#D8D5CD] pb-2">
-                Quick Actions
-              </h4>
-              <div className="space-y-1.5 text-xs">
-                <button className="w-full flex items-center gap-2 p-2 rounded hover:bg-[#ECEAE4] text-[#2457A6] font-semibold cursor-pointer">
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Add New Evidence</span>
-                </button>
-                <button className="w-full flex items-center gap-2 p-2 rounded hover:bg-[#ECEAE4] text-[#20252B] cursor-pointer">
-                  <CheckCircle className="w-3.5 h-3.5 text-[#287A52]" />
-                  <span>Verify All</span>
-                </button>
-                <button className="w-full flex items-center gap-2 p-2 rounded hover:bg-[#ECEAE4] text-[#20252B] cursor-pointer">
-                  <Download className="w-3.5 h-3.5 text-[#68717C]" />
-                  <span>Download All</span>
-                </button>
-                <button className="w-full flex items-center gap-2 p-2 rounded hover:bg-[#ECEAE4] text-[#20252B] cursor-pointer">
-                  <History className="w-3.5 h-3.5 text-[#68717C]" />
-                  <span>Evidence History</span>
-                </button>
-              </div>
-            </div>
           </div>
 
-          {/* Right 9 Cols: Mathematical Breakdown & Document Registry */}
-          <div className="lg:col-span-9 space-y-4">
-            {/* Mathematical Identity Evidence & Field Reasoning Breakdown */}
+          <div className="col-span-9 space-y-4">
             <IdentityEvidenceTable
               evidence={evidence}
               overallConfidence={confidenceScore}
             />
 
-            {/* Filter Bar */}
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#68717C] font-semibold">Evidence Type:</span>
-                  <select
-                    value={evidenceTypeFilter}
-                    onChange={(e) => setEvidenceTypeFilter(e.target.value)}
-                    className="p-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs"
-                  >
-                    <option>All</option>
-                    <option>PAN Card</option>
-                    <option>Aadhaar Card</option>
-                    <option>Address Proof</option>
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#68717C] font-semibold">Verification Status:</span>
-                  <select
-                    value={evidenceStatusFilter}
-                    onChange={(e) => setEvidenceStatusFilter(e.target.value)}
-                    className="p-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs"
-                  >
-                    <option>All</option>
-                    <option>Verified</option>
-                    <option>Pending Review</option>
-                    <option>Expired</option>
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#68717C] font-semibold">Source System:</span>
-                  <select className="p-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs">
-                    <option>All</option>
-                    <option>EQ (Equity)</option>
-                    <option>MF (Mutual Fund)</option>
-                    <option>LN (Loans)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] font-semibold flex items-center gap-1.5 cursor-pointer">
-                  <Filter className="w-3.5 h-3.5" />
-                  <span>Filters</span>
-                </button>
-                <button className="px-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#D8D5CD] text-[#68717C] hover:text-[#20252B] cursor-pointer">
-                  Reset
-                </button>
-              </div>
-            </div>
-
-            {/* Table */}
-            <div className="rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-[#D8D5CD] bg-[#ECEAE4] text-[#68717C] uppercase tracking-wider font-bold">
-                      <th className="py-3 px-4">Evidence Type</th>
-                      <th className="py-3 px-4">Document / Detail</th>
-                      <th className="py-3 px-4 text-center">Source System</th>
-                      <th className="py-3 px-4">Verified On</th>
-                      <th className="py-3 px-4">Verification Status</th>
-                      <th className="py-3 px-4 text-center">Confidence</th>
-                      <th className="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#D8D5CD] text-[#20252B]">
-                    {evidenceList
-                      .filter((item) => evidenceCategory === 'all' || item.category === evidenceCategory)
-                      .map((item) => (
-                        <tr key={item.id} className="hover:bg-[#FAF9F6] transition-colors">
-                          <td className="py-3 px-4 font-semibold text-[#20252B]">
-                            <div>{item.type}</div>
-                            <div className="text-[10px] text-[#68717C] font-normal">{item.subtitle}</div>
-                          </td>
-                          <td className="py-3 px-4">
-                            <div className="font-mono font-medium text-[#20252B]">{item.docDetail}</div>
-                            <div className="text-[10px] text-[#68717C]">{item.name}</div>
-                          </td>
-                          <td className="py-3 px-4 text-center">
-                            <span className="px-2 py-0.5 rounded bg-[#EBF1FA] text-[#2457A6] font-mono text-[10px] font-bold border border-[#BCD1F0]">
-                              {item.source}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4 text-xs font-mono text-[#68717C]">
-                            <div>{item.verifiedOn}</div>
-                            {item.verifiedSub && (
-                              <div className="text-[10px] text-[#287A52] font-semibold">{item.verifiedSub}</div>
-                            )}
-                          </td>
-                          <td className="py-3 px-4">
-                            {item.status === 'Verified' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#EBF4EF] text-[#287A52] border border-[#A8D3BC] text-[11px] font-semibold">
-                                <CheckCircle className="w-3 h-3" />
-                                <span>Verified</span>
-                              </span>
-                            )}
-                            {item.status === 'Pending Review' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#FBF4EB] text-[#A66A16] border border-[#E8CEAB] text-[11px] font-semibold">
-                                <Clock className="w-3 h-3" />
-                                <span>Pending Review</span>
-                              </span>
-                            )}
-                            {item.status === 'Expired' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F9ECEC] text-[#B84242] border border-[#E8B8B8] text-[11px] font-semibold">
-                                <XCircle className="w-3 h-3" />
-                                <span>Expired</span>
-                              </span>
-                            )}
-                            {item.status === 'Not Verified' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#ECEAE4] text-[#68717C] border border-[#D8D5CD] text-[11px] font-semibold">
-                                <HelpCircle className="w-3 h-3" />
-                                <span>Not Verified</span>
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-3 px-4 text-center font-mono font-bold">
-                            {item.confidence > 0 ? (
-                              <span className="text-[#287A52]">● {item.confidence}%</span>
-                            ) : (
-                              <span className="text-[#68717C]">—</span>
-                            )}
-                          </td>
-                          <td className="py-3 px-4 text-right">
-                            <div className="flex items-center justify-end gap-2 text-[#68717C]">
-                              <button className="p-1 hover:text-[#20252B] cursor-pointer">
-                                <Eye className="w-3.5 h-3.5" />
-                              </button>
-                              <button className="p-1 hover:text-[#20252B] cursor-pointer">
-                                <MoreVertical className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="p-3 bg-[#ECEAE4]/40 border-t border-[#D8D5CD] flex items-center justify-between text-xs text-[#68717C]">
-                <span>Showing 1 to 8 of 8 evidence records</span>
-                <div className="flex items-center gap-2">
-                  <span>Rows per page: 10</span>
-                  <span>1 of 1</span>
-                </div>
-              </div>
+            <div className="rounded-lg bg-white border border-gray-200 shadow-2xs overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-200 bg-gray-50 text-gray-500 uppercase tracking-wider font-bold">
+                    <th className="py-2.5 px-4">Document Type</th>
+                    <th className="py-2.5 px-4">Document Identifier</th>
+                    <th className="py-2.5 px-4 text-center">Silo Origin</th>
+                    <th className="py-2.5 px-4">Verification Status</th>
+                    <th className="py-2.5 px-4 text-center">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-gray-700">
+                  {evidenceList
+                    .filter((item) => evidenceCategory === 'all' || item.category === evidenceCategory)
+                    .map((item) => (
+                      <tr key={item.id} className="hover:bg-gray-50">
+                        <td className="py-2.5 px-4 font-bold text-gray-900">
+                          <div>{item.type}</div>
+                          <div className="text-[10px] text-gray-400 font-medium">{item.subtitle}</div>
+                        </td>
+                        <td className="py-2.5 px-4 font-mono font-medium text-gray-800">
+                          {item.docDetail}
+                        </td>
+                        <td className="py-2.5 px-4 text-center">
+                          <span className="px-1.5 py-0.2 rounded bg-blue-50 text-[#1B4FD8] font-mono text-[10px] font-bold border border-blue-200">
+                            {item.source}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-4">
+                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold border ${
+                            item.status === 'Verified'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}>
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-4 text-center font-mono font-bold text-emerald-700">
+                          {item.confidence > 0 ? `${item.confidence}%` : '—'}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       )}
 
-      {/* ========================================================
-          TAB 3: ATTRIBUTE CONFLICTS (Matching conflicts.jpg)
-         ======================================================== */}
+      {/* TAB 3: CONFLICTS */}
       {activeTab === 'conflicts' && (
-        <div className="space-y-4 animate-in fade-in duration-200">
-          {/* Top 4 Metrics Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex items-center gap-3">
-              <div className="p-2.5 rounded-lg bg-[#F9ECEC] text-[#B84242]">
-                <AlertTriangle className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold text-[#68717C] uppercase">Total Conflicts</span>
-                <div className="font-mono text-xl font-bold text-[#20252B]">5</div>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex items-center gap-3">
-              <div className="p-2.5 rounded-lg bg-[#F9ECEC] text-[#B84242]">
-                <ShieldAlert className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold text-[#68717C] uppercase">High Risk</span>
-                <div className="font-mono text-xl font-bold text-[#B84242]">2</div>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex items-center gap-3">
-              <div className="p-2.5 rounded-lg bg-[#FBF4EB] text-[#A66A16]">
-                <AlertTriangle className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold text-[#68717C] uppercase">Medium Risk</span>
-                <div className="font-mono text-xl font-bold text-[#A66A16]">2</div>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex items-center gap-3">
-              <div className="p-2.5 rounded-lg bg-[#EBF4EF] text-[#287A52]">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold text-[#68717C] uppercase">Low Risk</span>
-                <div className="font-mono text-xl font-bold text-[#287A52]">1</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Live Attribute Conflict Resolution & Admin Override Console */}
+        <div className="space-y-4 animate-in fade-in duration-150">
           <AttributeConflictCard goldenId={customer.goldenId} conflicts={conflicts} />
 
-          {/* Filter Bar */}
-          <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#68717C] font-semibold">Conflict Type:</span>
-                <select
-                  value={conflictTypeFilter}
-                  onChange={(e) => setConflictTypeFilter(e.target.value)}
-                  className="p-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs"
-                >
-                  <option>All</option>
-                  <option>Duplicate PAN</option>
-                  <option>Shared Mobile</option>
-                  <option>Address Overlap</option>
-                </select>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#68717C] font-semibold">Source System:</span>
-                <select className="p-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs">
-                  <option>All</option>
-                  <option>EQ</option>
-                  <option>MF</option>
-                  <option>LN</option>
-                </select>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#68717C] font-semibold">Status:</span>
-                <select
-                  value={conflictStatusFilter}
-                  onChange={(e) => setConflictStatusFilter(e.target.value)}
-                  className="p-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] text-xs"
-                >
-                  <option>All</option>
-                  <option>Open</option>
-                  <option>In Review</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button className="px-3 py-1.5 rounded-md bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] font-semibold flex items-center gap-1.5 cursor-pointer">
-                <Filter className="w-3.5 h-3.5" />
-                <span>Filters</span>
-              </button>
-              <button className="px-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#D8D5CD] text-[#68717C] hover:text-[#20252B] cursor-pointer">
-                Reset
-              </button>
-            </div>
-          </div>
-
-          {/* Conflicts Table */}
-          <div className="rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-[#D8D5CD] bg-[#ECEAE4] text-[#68717C] uppercase tracking-wider font-bold">
-                    <th className="py-3 px-4">Conflict ID</th>
-                    <th className="py-3 px-4">Conflict Type</th>
-                    <th className="py-3 px-4">Description</th>
-                    <th className="py-3 px-4">Matched With</th>
-                    <th className="py-3 px-4 text-center">Source System</th>
-                    <th className="py-3 px-4 text-center">Risk Level</th>
-                    <th className="py-3 px-4">Detected On</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+          <div className="rounded-lg bg-white border border-gray-200 shadow-2xs overflow-hidden">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-gray-200 bg-gray-50 text-gray-500 uppercase tracking-wider font-bold">
+                  <th className="py-2 px-4">ID</th>
+                  <th className="py-2 px-4">Conflict Field</th>
+                  <th className="py-2 px-4">Details</th>
+                  <th className="py-2 px-4">Matched With</th>
+                  <th className="py-2 px-4 text-center">Risk</th>
+                  <th className="py-2 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-gray-700">
+                {conflictList.map((item) => (
+                  <tr key={item.id} className="hover:bg-gray-50">
+                    <td className="py-2.5 px-4 font-mono font-bold text-[#1B4FD8]">{item.id}</td>
+                    <td className="py-2.5 px-4 font-bold text-gray-900">{item.type}</td>
+                    <td className="py-2.5 px-4 text-gray-500">{item.description}</td>
+                    <td className="py-2.5 px-4">
+                      <div className="font-bold text-gray-900">{item.matchedWith}</div>
+                      <div className="text-[10px] text-gray-400 font-mono">{item.matchedSub}</div>
+                    </td>
+                    <td className="py-2.5 px-4 text-center">
+                      <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold border ${
+                        item.risk === 'High'
+                          ? 'bg-red-50 text-red-700 border-red-200'
+                          : 'bg-amber-50 text-amber-800 border-amber-200'
+                      }`}>
+                        {item.risk}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-4">
+                      <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-blue-50 text-[#1B4FD8] border border-blue-200">
+                        {item.status}
+                      </span>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-[#D8D5CD] text-[#20252B]">
-                  {conflictList.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#FAF9F6] transition-colors">
-                      <td className="py-3 px-4 font-mono font-bold text-[#2457A6]">
-                        {item.id}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-[#20252B]">
-                        {item.type}
-                      </td>
-                      <td className="py-3 px-4 text-[#68717C]">
-                        {item.description}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-[#20252B]">{item.matchedWith}</div>
-                        <div className="text-[10px] text-[#68717C] font-mono">{item.matchedSub}</div>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className="px-2 py-0.5 rounded bg-[#EBF1FA] text-[#2457A6] font-mono text-[10px] font-bold border border-[#BCD1F0]">
-                          {item.source}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        {item.risk === 'High' && (
-                          <span className="px-2 py-0.5 rounded-full bg-[#F9ECEC] text-[#B84242] border border-[#E8B8B8] text-[10px] font-bold">
-                            High
-                          </span>
-                        )}
-                        {item.risk === 'Medium' && (
-                          <span className="px-2 py-0.5 rounded-full bg-[#FBF4EB] text-[#A66A16] border border-[#E8CEAB] text-[10px] font-bold">
-                            Medium
-                          </span>
-                        )}
-                        {item.risk === 'Low' && (
-                          <span className="px-2 py-0.5 rounded-full bg-[#EBF4EF] text-[#287A52] border border-[#A8D3BC] text-[10px] font-bold">
-                            Low
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-xs font-mono text-[#68717C]">
-                        {item.detectedOn}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                          item.status === 'Open'
-                            ? 'bg-[#EBF1FA] text-[#2457A6] border border-[#BCD1F0]'
-                            : 'bg-[#FBF4EB] text-[#A66A16] border border-[#E8CEAB]'
-                        }`}>
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2 text-[#68717C]">
-                          <button className="p-1 hover:text-[#20252B] cursor-pointer">
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
-                          <button className="p-1 hover:text-[#20252B] cursor-pointer">
-                            <MoreVertical className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="p-3 bg-[#ECEAE4]/40 border-t border-[#D8D5CD] flex items-center justify-between text-xs text-[#68717C]">
-              <span>Showing 1 to 5 of 5 conflict records</span>
-              <div className="flex items-center gap-2">
-                <span>Rows per page: 10</span>
-                <span>1 of 1</span>
-              </div>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
-      {/* ========================================================
-          TAB 4: OPPORTUNITIES (Matching opportunities.jpg)
-         ======================================================== */}
+      {/* TAB 4: OPPORTUNITIES */}
       {activeTab === 'opportunities' && (
-        <div className="space-y-4 animate-in fade-in duration-200">
-          <div className="p-4 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="space-y-4 animate-in fade-in duration-150">
+          <div className="p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-[#20252B]">
-                Next-best opportunities for {customer.name}
+              <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                Cross-Sell Recommendations for {customer.name}
               </h3>
-              <p className="text-xs text-[#68717C] mt-0.5">
-                AI-driven recommendations based on customer profile, relationship value, behavior and eligibility.
+              <p className="text-[10px] text-gray-400">
+                AI product affinity & financial propensity analytics engine
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-[#68717C] font-mono">Last evaluated: 20 May 2026, 10:20 AM</span>
-              <button className="px-2.5 py-1 rounded bg-[#ECEAE4] border border-[#D8D5CD] text-[#20252B] font-semibold flex items-center gap-1 cursor-pointer">
-                <RotateCcw className="w-3 h-3" />
-                <span>Refresh</span>
-              </button>
-            </div>
           </div>
 
-          {/* Opportunities Table / List */}
-          <div className="rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-[#D8D5CD] bg-[#ECEAE4] text-[#68717C] uppercase tracking-wider font-bold">
-                    <th className="py-3 px-4">Opportunity</th>
-                    <th className="py-3 px-4 text-center">Scores</th>
-                    <th className="py-3 px-4">Potential Value</th>
-                    <th className="py-3 px-4">Eligibility Conditions</th>
-                    <th className="py-3 px-4">Why?</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+          <div className="rounded-lg bg-white border border-gray-200 shadow-2xs overflow-hidden">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-gray-200 bg-gray-50 text-gray-500 uppercase tracking-wider font-bold">
+                  <th className="py-2.5 px-4">Recommended Product</th>
+                  <th className="py-2.5 px-4 text-center">Propensity Score</th>
+                  <th className="py-2.5 px-4 text-right">Potential Value</th>
+                  <th className="py-2.5 px-4">Eligibility Mapped</th>
+                  <th className="py-2.5 px-4">Justification</th>
+                  <th className="py-2.5 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-gray-700">
+                {fullOpportunities.map((opp) => (
+                  <tr key={opp.id} className="hover:bg-gray-50">
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-gray-900">{opp.title}</div>
+                      <div className="text-[10px] text-gray-400 font-medium">{opp.subtitle}</div>
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <div className="font-mono font-bold text-[#1B4FD8]">{opp.score}%</div>
+                      <span className="text-[9px] text-gray-400 font-semibold">{opp.scoreTone}</span>
+                    </td>
+                    <td className="py-3 px-4 text-right font-mono font-bold text-emerald-700">
+                      {opp.potentialValue}
+                    </td>
+                    <td className="py-3 px-4 space-y-0.5">
+                      {opp.conditions.slice(0, 2).map((c, i) => (
+                        <div key={i} className="flex items-center gap-1 text-[10px] text-gray-600 font-medium">
+                          <CheckCircle2 size={10} className="text-emerald-600" />
+                          <span>{c}</span>
+                        </div>
+                      ))}
+                    </td>
+                    <td className="py-3 px-4 text-[10px] text-gray-500 max-w-[200px] truncate leading-relaxed">
+                      {opp.why}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button className="px-2.5 py-1 rounded bg-[#1B4FD8] hover:bg-[#113CAD] text-white text-2xs font-bold cursor-pointer">
+                        Offer
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-[#D8D5CD] text-[#20252B]">
-                  {fullOpportunities.map((opp) => (
-                    <tr key={opp.id} className="hover:bg-[#FAF9F6] transition-colors">
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="font-bold text-xs text-[#20252B]">{opp.title}</div>
-                          <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold border ${
-                            opp.priority.includes('High')
-                              ? 'bg-[#EBF4EF] text-[#287A52] border-[#A8D3BC]'
-                              : opp.priority.includes('Medium')
-                              ? 'bg-[#FBF4EB] text-[#A66A16] border-[#E8CEAB]'
-                              : 'bg-[#ECEAE4] text-[#68717C] border-[#D8D5CD]'
-                          }`}>
-                            {opp.priority}
-                          </span>
-                        </div>
-                        <div className="text-[11px] text-[#68717C] mt-0.5">{opp.subtitle}</div>
-                      </td>
-
-                      <td className="py-3.5 px-4 text-center">
-                        <div className="w-8 h-8 rounded-full border-2 border-[#287A52] text-[#20252B] font-mono font-bold text-xs flex items-center justify-center mx-auto">
-                          {opp.score}
-                        </div>
-                        <span className="text-[9px] text-[#68717C] font-semibold mt-0.5 block">
-                          {opp.scoreTone}
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4 font-mono">
-                        <div className="font-bold text-sm text-[#287A52]">{opp.potentialValue}</div>
-                        <div className="text-[10px] text-[#68717C]">{opp.potentialLabel}</div>
-                      </td>
-
-                      <td className="py-3.5 px-4 space-y-1">
-                        {opp.conditions.map((cond, cIdx) => (
-                          <div key={cIdx} className="flex items-center gap-1 text-[11px] text-[#20252B]">
-                            <CheckCircle2 className="w-3 h-3 text-[#287A52] shrink-0" />
-                            <span>{cond}</span>
-                          </div>
-                        ))}
-                      </td>
-
-                      <td className="py-3.5 px-4 max-w-[280px]">
-                        <div className="text-[11px] text-[#20252B] leading-relaxed">
-                          {opp.why}
-                        </div>
-                        {opp.moreReasons && (
-                          <button className="text-[10px] font-semibold text-[#2457A6] hover:underline mt-1 block cursor-pointer">
-                            {opp.moreReasons}
-                          </button>
-                        )}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-right space-y-1">
-                        <button className="px-3 py-1 rounded bg-[#2457A6] hover:bg-[#183B70] text-white text-xs font-semibold shadow-2xs cursor-pointer block w-full text-center">
-                          Initiate
-                        </button>
-                        <button className="px-3 py-1 rounded bg-[#FFFFFF] hover:bg-[#ECEAE4] text-[#68717C] hover:text-[#20252B] text-[11px] border border-[#D8D5CD] cursor-pointer block w-full text-center">
-                          ✕ Dismiss
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="p-3 bg-[#ECEAE4]/40 border-t border-[#D8D5CD] flex items-center justify-between text-xs text-[#68717C]">
-              <span>Showing 1 to 5 of 5 opportunities</span>
-              <div className="flex items-center gap-2">
-                <span>Rows per page: 10</span>
-                <span>1 of 1</span>
-              </div>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
-      {/* ========================================================
-          TAB 5: SOURCE LINEAGE (Matching source_lineage.jpg)
-         ======================================================== */}
+      {/* TAB 5: SOURCE LINEAGE */}
       {activeTab === 'lineage' && (
         <SourceLineagePanel
           sourceLineage={lineage}
           goldenId={customer.goldenId}
           customerName={customer.name}
-          createdOn="12 Aug 2019, 11:23 AM"
-          lastUpdated="20 May 2026, 10:05 AM"
           overallQuality={96}
         />
       )}
 
-      {/* ========================================================
-          TAB 6: NOTES & AUDIT ACTIVITY
-         ======================================================== */}
+      {/* TAB 6: NOTES & AUDIT ACTIVITY */}
       {activeTab === 'notes' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in duration-200">
-          {/* RM Notes Journal */}
-          <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs space-y-4">
-            <div className="pb-2 border-b border-[#D8D5CD]">
-              <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                Relationship Notes & Activity Journal
+        <div className="grid grid-cols-12 gap-4 animate-in fade-in duration-150">
+          {/* Notes Journal */}
+          <div className="col-span-6 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs space-y-3 flex flex-col min-h-0">
+            <div className="pb-1.5 border-b border-gray-150">
+              <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                Relationship Activity Journal
               </h3>
-              <p className="text-[11px] text-[#68717C]">
-                Record client interactions, advisory meeting notes, and compliance follow-ups.
-              </p>
             </div>
 
-            <form onSubmit={handleAddNote} className="space-y-2">
+            <form onSubmit={handleAddNote} className="space-y-2 shrink-0">
               <textarea
-                rows={3}
-                placeholder="Type advisory note, conversation summary or action item..."
+                rows={2}
+                placeholder="Type interaction or meeting logs..."
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
-                className="w-full p-2.5 rounded-md bg-[#FFFFFF] border border-[#D8D5CD] text-xs text-[#20252B] placeholder-[#68717C] focus:border-[#2457A6] focus:outline-hidden"
+                className="w-full px-3 py-2 rounded border border-gray-300 bg-gray-50 focus:bg-white focus:border-[#1B4FD8] focus:outline-none text-xs"
               />
               <button
                 type="submit"
                 disabled={!newNote.trim()}
-                className="px-3.5 py-1.5 rounded-md bg-[#2457A6] hover:bg-[#183B70] text-white text-xs font-semibold cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                className="px-2.5 py-1 rounded bg-[#1B4FD8] hover:bg-[#113CAD] text-white text-xs font-semibold cursor-pointer disabled:opacity-50"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Save Note to Profile</span>
+                Save Log
               </button>
             </form>
 
-            <div className="space-y-3 pt-2">
+            <div className="flex-1 overflow-y-auto space-y-2 mt-2">
               {localNotes.map((note) => (
                 <div
                   key={note.id}
-                  className="p-3.5 rounded-md border border-[#D8D5CD] bg-[#ECEAE4]/50 space-y-1 text-xs"
+                  className="p-2.5 rounded border border-gray-200 bg-gray-50 space-y-1 text-xs"
                 >
-                  <div className="flex items-center justify-between text-[11px] text-[#68717C]">
-                    <span className="font-bold text-[#20252B]">{note.author}</span>
+                  <div className="flex items-center justify-between text-[9px] text-gray-400 font-bold uppercase">
+                    <span className="text-gray-700">{note.author}</span>
                     <span className="font-mono">{note.date}</span>
                   </div>
-                  <p className="text-[#20252B] leading-relaxed">{note.text}</p>
+                  <p className="text-gray-900 font-medium">{note.text}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Golden Record Audit Stream */}
-          <div className="p-5 rounded-lg bg-[#FFFFFF] border border-[#D8D5CD] shadow-xs space-y-4">
-            <div className="pb-2 border-b border-[#D8D5CD]">
-              <h3 className="text-xs font-bold text-[#20252B] uppercase tracking-wider">
-                Immutable Governance & Audit Trail
+          {/* Governance log */}
+          <div className="col-span-6 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col min-h-0">
+            <div className="pb-1.5 border-b border-gray-150 shrink-0">
+              <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                Immutable Core Audit Stream
               </h3>
-              <p className="text-[11px] text-[#68717C]">
-                Security logs matching decisions, conflict overrides, and opportunity status modifications.
-              </p>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="flex-1 overflow-y-auto space-y-2 mt-2">
               {auditData?.logs && auditData.logs.length > 0 ? (
                 auditData.logs.map((log) => (
                   <div
                     key={log.id}
-                    className="p-3 rounded-md bg-[#ECEAE4]/40 border border-[#D8D5CD] text-xs space-y-1 font-sans"
+                    className="p-2 rounded bg-gray-50 border border-gray-200 text-xs space-y-1 font-sans"
                   >
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#68717C]">
-                      <span className="font-bold text-[#2457A6] uppercase">{log.action}</span>
+                    <div className="flex items-center justify-between text-[9px] font-mono font-bold uppercase text-gray-400">
+                      <span className="text-[#1B4FD8]">{log.action}</span>
                       <span>{log.timestamp}</span>
                     </div>
-                    <div className="text-[#20252B] font-medium">{log.description}</div>
-                    <div className="text-[10px] text-[#68717C] font-mono">
-                      Actor: {log.actorEmail} ({log.actorRole})
+                    <div className="text-gray-900 font-bold">{log.description}</div>
+                    <div className="text-[9px] text-gray-500 font-mono">
+                      Actor: {log.actorEmail}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="p-6 text-center text-xs text-[#68717C]">
-                  No audit logs recorded yet for Golden ID {customer.goldenId}.
+                <div className="py-6 text-center text-xs text-gray-400">
+                  No governance logs recorded.
                 </div>
               )}
             </div>

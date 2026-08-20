@@ -8,9 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Currency formatter for Indian Rupee (INR)
- * e.g. >= 1 Crore -> ₹2.4Cr
- * >= 1 Lakh -> ₹24L
- * >= 1000 -> ₹24K
+ * >= 1 Crore -> ₹2.4Cr  | >= 1 Lakh -> ₹24L | >= 1000 -> ₹24K
  */
 export function formatCurrency(amount: number | undefined | null): string {
   if (amount === undefined || amount === null || isNaN(amount)) return '₹0';
@@ -37,11 +35,7 @@ export function formatCurrency(amount: number | undefined | null): string {
 }
 
 export function formatFullINR(amount: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
 }
 
 export function formatDate(dateString?: string): string {
@@ -49,11 +43,7 @@ export function formatDate(dateString?: string): string {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
-    return date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   } catch {
     return dateString;
   }
@@ -65,13 +55,8 @@ export function formatDateTime(dateString?: string): string {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
     return date.toLocaleString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
     });
   } catch {
     return dateString;
@@ -136,58 +121,48 @@ export function getConfidenceBadgeProps(score: number, autoMerge = 85, manualRev
 export function getSourceDetails(source: SourceSystem | string) {
   switch (source.toLowerCase()) {
     case 'equity':
-      return {
-        code: 'EQ',
-        name: 'Equity Brokerage',
-        color: 'bg-[#EBF1FA] text-[#2457A6] border-[#BCD1F0]',
-        border: 'border-[#2457A6]',
-        hex: '#2457A6',
-      };
+      return { code: 'EQ', name: 'Equity Brokerage', color: 'bg-[#EBF1FA] text-[#2457A6] border-[#BCD1F0]', hex: '#2457A6' };
     case 'mf':
-      return {
-        code: 'MF',
-        name: 'Mutual Funds',
-        color: 'bg-[#F2EDFA] text-[#6A3BB8] border-[#D6C7F0]',
-        border: 'border-[#6A3BB8]',
-        hex: '#6A3BB8',
-      };
+      return { code: 'MF', name: 'Mutual Funds', color: 'bg-[#F2EDFA] text-[#6A3BB8] border-[#D6C7F0]', hex: '#6A3BB8' };
     case 'insurance':
-      return {
-        code: 'INS',
-        name: 'General & Life Insurance',
-        color: 'bg-[#EBF4EF] text-[#287A52] border-[#A8D3BC]',
-        border: 'border-[#287A52]',
-        hex: '#287A52',
-      };
+      return { code: 'INS', name: 'General & Life Insurance', color: 'bg-[#EBF4EF] text-[#287A52] border-[#A8D3BC]', hex: '#287A52' };
     case 'loans':
-      return {
-        code: 'LOAN',
-        name: 'Retail & Home Loans',
-        color: 'bg-[#FBF4EB] text-[#A66A16] border-[#E8CEAB]',
-        border: 'border-[#A66A16]',
-        hex: '#A66A16',
-      };
+      return { code: 'LOAN', name: 'Retail & Home Loans', color: 'bg-[#FBF4EB] text-[#A66A16] border-[#E8CEAB]', hex: '#A66A16' };
     case 'wealth':
-      return {
-        code: 'WLT',
-        name: 'Private Wealth Management',
-        color: 'bg-[#FAF0F5] text-[#9E2B6C] border-[#ECC8DE]',
-        border: 'border-[#9E2B6C]',
-        hex: '#9E2B6C',
-      };
+      return { code: 'WLT', name: 'Private Wealth Management', color: 'bg-[#FAF0F5] text-[#9E2B6C] border-[#ECC8DE]', hex: '#9E2B6C' };
     default:
-      return {
-        code: source.toUpperCase().slice(0, 3),
-        name: source,
-        color: 'bg-[#ECEAE4] text-[#20252B] border-[#D8D5CD]',
-        border: 'border-[#D8D5CD]',
-        hex: '#68717C',
-      };
+      return { code: source.toUpperCase().slice(0, 3), name: source, color: 'bg-[#ECEAE4] text-[#20252B] border-[#D8D5CD]', hex: '#68717C' };
+  }
+}
+
+export function getOpportunityProductLabel(product: string): string {
+  switch (product) {
+    case 'equity': return 'Direct Equity';
+    case 'mf': return 'Mutual Funds';
+    case 'insurance': return 'Insurance';
+    case 'loans': return 'Loans / LAS';
+    case 'wealth': return 'Wealth Management';
+    default: return product;
+  }
+}
+
+export function getOpportunityStatusProps(status: string) {
+  switch (status) {
+    case 'new':
+      return { label: 'NEW', bgClass: 'bg-[#EBF1FA] text-[#2457A6] border-[#BCD1F0]' };
+    case 'in_progress':
+      return { label: 'IN PROGRESS', bgClass: 'bg-[#FBF4EB] text-[#A66A16] border-[#E8CEAB]' };
+    case 'converted':
+      return { label: 'CONVERTED', bgClass: 'bg-[#EBF4EF] text-[#287A52] border-[#A8D3BC]' };
+    case 'dismissed':
+      return { label: 'DISMISSED', bgClass: 'bg-[#ECEAE4] text-[#68717C] border-[#D8D5CD]' };
+    default:
+      return { label: status.toUpperCase(), bgClass: 'bg-[#ECEAE4] text-[#68717C] border-[#D8D5CD]' };
   }
 }
 
 /**
- * Jaro-Winkler string similarity (returns value from 0 to 100)
+ * Jaro-Winkler similarity (returns 0-100)
  */
 export function jaroWinklerSimilarity(s1: string, s2: string): number {
   if (!s1 || !s2) return 0;
@@ -223,12 +198,8 @@ export function jaroWinklerSimilarity(s1: string, s2: string): number {
   let transpositions = 0;
   for (let i = 0; i < len1; i++) {
     if (!aMatches[i]) continue;
-    while (!bMatches[k]) {
-      k++;
-    }
-    if (a[i] !== b[k]) {
-      transpositions++;
-    }
+    while (!bMatches[k]) k++;
+    if (a[i] !== b[k]) transpositions++;
     k++;
   }
 
@@ -238,7 +209,6 @@ export function jaroWinklerSimilarity(s1: string, s2: string): number {
     if (a[i] === b[i]) prefix++;
     else break;
   }
-
   const jw = sim + prefix * 0.1 * (1 - sim);
   return Math.round(jw * 100);
 }
@@ -251,15 +221,7 @@ export function normalizeName(name?: string): string {
 export function normalizeMobile(mobile?: string): string {
   if (!mobile) return '';
   let digits = mobile.replace(/\D/g, '');
-  if (digits.startsWith('91') && digits.length === 12) {
-    digits = digits.slice(2);
-  } else if (digits.startsWith('0') && digits.length === 11) {
-    digits = digits.slice(1);
-  }
+  if (digits.startsWith('91') && digits.length === 12) digits = digits.slice(2);
+  else if (digits.startsWith('0') && digits.length === 11) digits = digits.slice(1);
   return digits;
-}
-
-export function normalizePAN(pan?: string): string {
-  if (!pan) return '';
-  return pan.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
 }
