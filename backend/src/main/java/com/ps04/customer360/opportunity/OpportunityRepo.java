@@ -15,6 +15,7 @@ public interface OpportunityRepo extends MongoRepository<Opportunity, String> {
     Page<Opportunity> findByRmIdIn(List<String> rmIds, Pageable pageable);
     Page<Opportunity> findByProduct(String product, Pageable pageable);
     Page<Opportunity> findByRmIdAndProduct(String rmId, String product, Pageable pageable);
+    Page<Opportunity> findByRmIdInAndProduct(List<String> rmIds, String product, Pageable pageable);
     long countByStatus(String status);
     long countByRmIdAndStatus(String rmId, String status);
     long countByRmIdInAndStatus(List<String> rmIds, String status);

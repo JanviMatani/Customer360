@@ -2,6 +2,8 @@ package com.ps04.customer360.ingestion;
 
 import com.opencsv.CSVReader;
 import com.ps04.customer360.config_rules.ConfigService;
+import com.ps04.customer360.golden.GoldenCustomerLinkRepo;
+import com.ps04.customer360.golden.GoldenCustomerRepo;
 import com.ps04.customer360.golden.GoldenCustomerService;
 import com.ps04.customer360.ingestion.model.*;
 import com.ps04.customer360.matching.*;
@@ -10,6 +12,8 @@ import com.ps04.customer360.matching.model.FieldEvidence;
 import com.ps04.customer360.matching.model.MatchDecision;
 import com.ps04.customer360.matching.model.MatchResult;
 import com.ps04.customer360.normalization.NormalizationService;
+import com.ps04.customer360.opportunity.OpportunityRepo;
+import com.ps04.customer360.review.ConflictQueueRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,6 +43,10 @@ public class IngestionService {
     private final MatchDecisionService matchDecisionService;
     private final ConfigService configService;
     private final GoldenCustomerService goldenCustomerService;
+    private final GoldenCustomerRepo goldenCustomerRepo;
+    private final GoldenCustomerLinkRepo goldenCustomerLinkRepo;
+    private final ConflictQueueRepo conflictQueueRepo;
+    private final OpportunityRepo opportunityRepo;
 
     public IngestionService(NormalizationService normalizationService,
                             RawEquityRepo equityRepo, RawMfRepo mfRepo,
@@ -47,7 +55,11 @@ public class IngestionService {
                             DeterministicMatchService deterministicMatch, FuzzyMatchService fuzzyMatch,
                             ConfidenceScoringService scoringService, ConflictDetectionService conflictDetection,
                             MatchDecisionService matchDecisionService, ConfigService configService,
-                            GoldenCustomerService goldenCustomerService) {
+                            GoldenCustomerService goldenCustomerService,
+                            GoldenCustomerRepo goldenCustomerRepo,
+                            GoldenCustomerLinkRepo goldenCustomerLinkRepo,
+                            ConflictQueueRepo conflictQueueRepo,
+                            OpportunityRepo opportunityRepo) {
         this.normalizationService = normalizationService;
         this.equityRepo = equityRepo;
         this.mfRepo = mfRepo;
@@ -62,18 +74,43 @@ public class IngestionService {
         this.matchDecisionService = matchDecisionService;
         this.configService = configService;
         this.goldenCustomerService = goldenCustomerService;
+        this.goldenCustomerRepo = goldenCustomerRepo;
+        this.goldenCustomerLinkRepo = goldenCustomerLinkRepo;
+        this.conflictQueueRepo = conflictQueueRepo;
+        this.opportunityRepo = opportunityRepo;
     }
 
     /**
      * Reloads and re-normalizes all records, then reruns candidate generation and matching.
      */
+    /**
+     * Full pipeline rebuild:
+     *   1. Clear all derived/computed collections (golden_customers,
+     *      golden_customer_links, conflict_queue, opportunities).
+     *      This ensures a threshold or rule change produces a clean result —
+     *      no stale golden records from the previous run will interfere.
+     *   2. Re-normalize all raw records with current normalization rules.
+     *   3. Run candidate generation + matching + decision for every record pair.
+     *   4. Create single-source golden records for unmatched records.
+     *
+     * IMPORTANT: Raw source collections (raw_equity_customers, etc.) are NOT
+     * cleared — they represent the original source data and are always preserved.
+     */
     public int reloadAndMatchAll() {
-        log.info("Starting pipeline match execution across all raw records...");
+        log.info("Starting full pipeline rebuild — clearing derived collections first...");
 
-        // Re-normalize all existing records in database
+        // ── Step 1: Clear all derived/computed data ──────────────────────────
+        goldenCustomerRepo.deleteAll();
+        goldenCustomerLinkRepo.deleteAll();
+        conflictQueueRepo.deleteAll();
+        opportunityRepo.deleteAll();
+        GoldenCustomerService.resetIdCounter();
+        log.info("Cleared golden_customers, golden_customer_links, conflict_queue, opportunities.");
+
+        // ── Step 2: Re-normalize all existing raw records ────────────────────
         reNormalizeAllInDb();
 
-        // Run full identity matching engine
+        // ── Step 3: Run full identity matching engine ────────────────────────
         List<SourceRecordRef> allRecords = candidateGen.getAllSourceRecords();
         int processedPairs = 0;
         Set<String> evaluatedPairs = new HashSet<>();
@@ -93,10 +130,11 @@ public class IngestionService {
             }
         }
 
-        // For records that had zero matches/candidates (e.g. single-source record Rahul Verma), create single-source golden customer
+        // ── Step 4: Create single-source golden records for unmatched records ─
         createSingleSourceGoldenCustomers(allRecords);
 
-        log.info("Pipeline match completed: evaluated {} record pairs.", processedPairs);
+        log.info("Pipeline rebuild complete: evaluated {} record pairs, created {} golden customers.",
+                processedPairs, goldenCustomerRepo.count());
         return processedPairs;
     }
 
@@ -252,7 +290,8 @@ public class IngestionService {
 
     private void createSingleSourceGoldenCustomers(List<SourceRecordRef> records) {
         for (SourceRecordRef r : records) {
-            goldenCustomerService.mergeRecords(List.of(r), null, "SINGLE_SOURCE", 100, "system");
+            // confidence = 0: no cross-system match was proven for this record
+                goldenCustomerService.mergeRecords(List.of(r), null, "SINGLE_SOURCE", 0, "system");
         }
     }
 

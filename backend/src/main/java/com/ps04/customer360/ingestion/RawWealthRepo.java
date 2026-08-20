@@ -11,4 +11,5 @@ public interface RawWealthRepo extends MongoRepository<RawWealthCustomer, String
     List<RawWealthCustomer> findByNormalizedPan(String pan);
     List<RawWealthCustomer> findByNormalizedMobile(String mobile);
     List<RawWealthCustomer> findByNormalizedEmail(String email);
+    java.util.Optional<RawWealthCustomer> findBySourceCustomerId(String sourceCustomerId);
 }

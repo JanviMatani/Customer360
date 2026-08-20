@@ -207,6 +207,8 @@ public class GoldenCustomerService {
 
         Map<String, List<ValueWithSource>> emails = new LinkedHashMap<>();
         Map<String, List<ValueWithSource>> cities = new LinkedHashMap<>();
+        Map<String, List<ValueWithSource>> names = new LinkedHashMap<>();
+        Map<String, List<ValueWithSource>> mobiles = new LinkedHashMap<>();
 
         for (SourceRecordRef r : sorted) {
             if (!res.linkedSources.contains(r.sourceSystem())) {
@@ -230,6 +232,14 @@ public class GoldenCustomerService {
                     cities.computeIfAbsent(norm.getCity(), k -> new ArrayList<>())
                             .add(new ValueWithSource(norm.getCity(), r.sourceSystem()));
                 }
+                if (norm.getName() != null && !norm.getName().isBlank()) {
+                    names.computeIfAbsent(norm.getName(), k -> new ArrayList<>())
+                            .add(new ValueWithSource(norm.getName(), r.sourceSystem()));
+                }
+                if (norm.getMobile() != null) {
+                    mobiles.computeIfAbsent(norm.getMobile(), k -> new ArrayList<>())
+                            .add(new ValueWithSource(norm.getMobile(), r.sourceSystem()));
+                }
             }
 
             // Extract segment / rm_id / raw metadata if available
@@ -243,7 +253,8 @@ public class GoldenCustomerService {
         // Build attributeConflicts for Email if multiple distinct emails exist
         if (emails.size() > 1) {
             String winnerValue = res.primaryEmail;
-            String winnerSource = emails.get(winnerValue).get(0).source;
+            String winnerSource = emails.get(winnerValue) != null && !emails.get(winnerValue).isEmpty()
+                    ? emails.get(winnerValue).get(0).source : "UNKNOWN";
             List<AttributeConflict.ConflictingValue> losers = new ArrayList<>();
             emails.forEach((val, list) -> {
                 if (!val.equalsIgnoreCase(winnerValue)) {
@@ -252,6 +263,63 @@ public class GoldenCustomerService {
             });
             res.attributeConflicts.add(AttributeConflict.builder()
                     .field("email")
+                    .selectedValue(winnerValue)
+                    .selectedSource(winnerSource)
+                    .conflictingValues(losers)
+                    .build());
+        }
+
+        // Build attributeConflicts for Name if multiple distinct names exist across sources
+        if (names.size() > 1) {
+            String winnerValue = res.primaryName;
+            String winnerSource = (winnerValue != null && names.get(winnerValue) != null && !names.get(winnerValue).isEmpty())
+                    ? names.get(winnerValue).get(0).source : "UNKNOWN";
+            List<AttributeConflict.ConflictingValue> losers = new ArrayList<>();
+            names.forEach((val, list) -> {
+                if (!val.equalsIgnoreCase(winnerValue)) {
+                    list.forEach(v -> losers.add(new AttributeConflict.ConflictingValue(v.value, v.source)));
+                }
+            });
+            res.attributeConflicts.add(AttributeConflict.builder()
+                    .field("name")
+                    .selectedValue(winnerValue)
+                    .selectedSource(winnerSource)
+                    .conflictingValues(losers)
+                    .build());
+        }
+
+        // Build attributeConflicts for Mobile if multiple distinct mobiles exist across sources
+        if (mobiles.size() > 1) {
+            String winnerValue = res.primaryMobile;
+            String winnerSource = (winnerValue != null && mobiles.get(winnerValue) != null && !mobiles.get(winnerValue).isEmpty())
+                    ? mobiles.get(winnerValue).get(0).source : "UNKNOWN";
+            List<AttributeConflict.ConflictingValue> losers = new ArrayList<>();
+            mobiles.forEach((val, list) -> {
+                if (!val.equals(winnerValue)) {
+                    list.forEach(v -> losers.add(new AttributeConflict.ConflictingValue(v.value, v.source)));
+                }
+            });
+            res.attributeConflicts.add(AttributeConflict.builder()
+                    .field("mobile")
+                    .selectedValue(winnerValue)
+                    .selectedSource(winnerSource)
+                    .conflictingValues(losers)
+                    .build());
+        }
+
+        // Build attributeConflicts for City if multiple distinct cities exist across sources
+        if (cities.size() > 1) {
+            String winnerValue = res.primaryCity;
+            String winnerSource = (winnerValue != null && cities.get(winnerValue) != null && !cities.get(winnerValue).isEmpty())
+                    ? cities.get(winnerValue).get(0).source : "UNKNOWN";
+            List<AttributeConflict.ConflictingValue> losers = new ArrayList<>();
+            cities.forEach((val, list) -> {
+                if (!val.equalsIgnoreCase(winnerValue)) {
+                    list.forEach(v -> losers.add(new AttributeConflict.ConflictingValue(v.value, v.source)));
+                }
+            });
+            res.attributeConflicts.add(AttributeConflict.builder()
+                    .field("city")
                     .selectedValue(winnerValue)
                     .selectedSource(winnerSource)
                     .conflictingValues(losers)

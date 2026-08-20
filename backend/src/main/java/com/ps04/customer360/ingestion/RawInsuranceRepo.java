@@ -11,4 +11,5 @@ public interface RawInsuranceRepo extends MongoRepository<RawInsuranceCustomer, 
     List<RawInsuranceCustomer> findByNormalizedPan(String pan);
     List<RawInsuranceCustomer> findByNormalizedMobile(String mobile);
     List<RawInsuranceCustomer> findByNormalizedEmail(String email);
+    java.util.Optional<RawInsuranceCustomer> findBySourceCustomerId(String sourceCustomerId);
 }

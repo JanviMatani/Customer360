@@ -33,7 +33,7 @@ class OpportunityRuleEngineTest {
         configService = new StubConfigService();
         auditService = new StubAuditService();
 
-        engine = new OpportunityRuleEngine(goldenRepo, c360Service, oppRepo, configService, new OpportunityScoringService(), auditService);
+        engine = new OpportunityRuleEngine(goldenRepo, c360Service, oppRepo, configService, new OpportunityScoringService(configService), auditService);
 
         OpportunityRule rule1 = OpportunityRule.builder()
                 .id("insurance-cross-sell-v1")
@@ -131,6 +131,12 @@ class OpportunityRuleEngineTest {
         List<OpportunityRule> rules = new ArrayList<>();
         public StubConfigService() { super(null); }
         @Override public List<OpportunityRule> getOpportunityRules() { return rules; }
+        @Override public java.util.Map<String, Object> getScoringWeights() {
+            return java.util.Map.of(
+                "potential", 40, "relationship", 25, "recency", 20, "engagement", 15,
+                "maxPotentialValue", 2000000, "maxRelationshipValue", 2000000
+            );
+        }
     }
 
     private static class StubCustomer360Service extends Customer360Service {
@@ -190,6 +196,7 @@ class OpportunityRuleEngineTest {
         @Override public org.springframework.data.domain.Page<Opportunity> findByRmIdIn(List<String> rmIds, org.springframework.data.domain.Pageable pageable) { return org.springframework.data.domain.Page.empty(); }
         @Override public org.springframework.data.domain.Page<Opportunity> findByProduct(String product, org.springframework.data.domain.Pageable pageable) { return org.springframework.data.domain.Page.empty(); }
         @Override public org.springframework.data.domain.Page<Opportunity> findByRmIdAndProduct(String rmId, String product, org.springframework.data.domain.Pageable pageable) { return org.springframework.data.domain.Page.empty(); }
+        @Override public org.springframework.data.domain.Page<Opportunity> findByRmIdInAndProduct(List<String> rmIds, String product, org.springframework.data.domain.Pageable pageable) { return org.springframework.data.domain.Page.empty(); }
         @Override public long countByStatus(String status) { return 0; }
         @Override public long countByRmIdAndStatus(String rmId, String status) { return 0; }
         @Override public long countByRmIdInAndStatus(List<String> rmIds, String status) { return 0; }

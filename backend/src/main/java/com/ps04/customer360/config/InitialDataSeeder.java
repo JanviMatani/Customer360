@@ -109,9 +109,19 @@ public class InitialDataSeeder implements CommandLineRunner {
             ));
             mongoTemplate.save(weightsDoc, "config_rules");
 
+            Map<String, Object> scoringWeights = new HashMap<>(Map.of(
+                    "potential",            40,
+                    "relationship",         25,
+                    "recency",              20,
+                    "engagement",           15,
+                    "maxPotentialValue",    2000000,
+                    "maxRelationshipValue", 2000000
+            ));
+
             Map<String, Object> oppRulesDoc = new HashMap<>(Map.of(
                     "_id", "opportunity-rules-v1",
                     "type", "OPPORTUNITY_RULES",
+                    "scoringWeights", scoringWeights,
                     "rules", List.of(
                             Map.of(
                                     "id", "insurance-cross-sell-v1",

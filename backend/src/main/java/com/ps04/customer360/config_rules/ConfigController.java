@@ -72,4 +72,38 @@ public class ConfigController {
             }
         }
     }
+
+    // ─── Opportunity Rules Endpoints ─────────────────────────────────────────
+
+    /**
+     * GET /api/config/opportunity-rules
+     * Any authenticated user can read the opportunity rules (read-only).
+     */
+    @GetMapping("/opportunity-rules")
+    public ResponseEntity<Map<String, Object>> getOpportunityRules() {
+        Map<String, Object> doc = configService.getOpportunityRulesRaw();
+        return ResponseEntity.ok(doc);
+    }
+
+    /**
+     * PUT /api/config/opportunity-rules
+     * ADMIN only. Updates opportunity rules and logs the change.
+     * The new config replaces the full rules document.
+     */
+    @PutMapping("/opportunity-rules")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Audited(action = "OPP_RULES_UPDATE", targetType = "config")
+    public ResponseEntity<Map<String, Object>> updateOpportunityRules(
+            @AuthenticationPrincipal AppPrincipal principal,
+            @RequestBody Map<String, Object> newConfig) {
+
+        Map<String, Object> before = configService.getOpportunityRulesRaw();
+        Map<String, Object> updated = configService.updateOpportunityRules(newConfig, principal.email());
+
+        auditService.log(principal.email(), principal.role(), "OPP_RULES_UPDATE",
+                "config", "opportunity-rules-v1", before, updated, null,
+                "Updated opportunity rules");
+
+        return ResponseEntity.ok(updated);
+    }
 }

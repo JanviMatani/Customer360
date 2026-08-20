@@ -292,35 +292,51 @@ public class Customer360Service {
                 .build();
     }
 
+    /**
+     * Fetches a single source record by system+customerId using indexed lookup (not full scan).
+     * Raw map is sanitized before returning: PAN and mobile are masked to prevent
+     * sensitive values leaking through the lineage section of the Customer360 response.
+     */
     private SourceLineageItem fetchLineageItem(String sys, String cid) {
         return switch (sys.toUpperCase()) {
-            case "EQUITY" -> equityRepo.findAll().stream()
-                    .filter(r -> cid.equals(r.getSourceCustomerId()))
-                    .findFirst()
-                    .map(r -> new SourceLineageItem("EQUITY", cid, r.getRaw(), r.getNormalized()))
+            case "EQUITY" -> equityRepo.findBySourceCustomerId(cid)
+                    .map(r -> new SourceLineageItem("EQUITY", cid, maskRawMap(r.getRaw()), r.getNormalized()))
                     .orElse(null);
-            case "MF" -> mfRepo.findAll().stream()
-                    .filter(r -> cid.equals(r.getSourceCustomerId()))
-                    .findFirst()
-                    .map(r -> new SourceLineageItem("MF", cid, r.getRaw(), r.getNormalized()))
+            case "MF" -> mfRepo.findBySourceCustomerId(cid)
+                    .map(r -> new SourceLineageItem("MF", cid, maskRawMap(r.getRaw()), r.getNormalized()))
                     .orElse(null);
-            case "INSURANCE" -> insuranceRepo.findAll().stream()
-                    .filter(r -> cid.equals(r.getSourceCustomerId()))
-                    .findFirst()
-                    .map(r -> new SourceLineageItem("INSURANCE", cid, r.getRaw(), r.getNormalized()))
+            case "INSURANCE" -> insuranceRepo.findBySourceCustomerId(cid)
+                    .map(r -> new SourceLineageItem("INSURANCE", cid, maskRawMap(r.getRaw()), r.getNormalized()))
                     .orElse(null);
-            case "LOANS" -> loanRepo.findAll().stream()
-                    .filter(r -> cid.equals(r.getSourceCustomerId()))
-                    .findFirst()
-                    .map(r -> new SourceLineageItem("LOANS", cid, r.getRaw(), r.getNormalized()))
+            case "LOANS" -> loanRepo.findBySourceCustomerId(cid)
+                    .map(r -> new SourceLineageItem("LOANS", cid, maskRawMap(r.getRaw()), r.getNormalized()))
                     .orElse(null);
-            case "WEALTH" -> wealthRepo.findAll().stream()
-                    .filter(r -> cid.equals(r.getSourceCustomerId()))
-                    .findFirst()
-                    .map(r -> new SourceLineageItem("WEALTH", cid, r.getRaw(), r.getNormalized()))
+            case "WEALTH" -> wealthRepo.findBySourceCustomerId(cid)
+                    .map(r -> new SourceLineageItem("WEALTH", cid, maskRawMap(r.getRaw()), r.getNormalized()))
                     .orElse(null);
             default -> null;
         };
+    }
+
+    /**
+     * Returns a copy of the raw map with PAN and mobile masked.
+     * This prevents sensitive values from leaking through the sourceLineage
+     * section of the Customer360 response — masking must happen server-side.
+     */
+    private Map<String, String> maskRawMap(Map<String, String> raw) {
+        if (raw == null) return null;
+        Map<String, String> masked = new LinkedHashMap<>(raw);
+        if (masked.containsKey("pan")) {
+            masked.put("pan", maskingService.maskPan(masked.get("pan")));
+        }
+        if (masked.containsKey("mobile")) {
+            masked.put("mobile", maskingService.maskMobile(masked.get("mobile")));
+        }
+        // Also mask common alternate field names present in some source CSVs
+        if (masked.containsKey("mobile_number")) {
+            masked.put("mobile_number", maskingService.maskMobile(masked.get("mobile_number")));
+        }
+        return masked;
     }
 
     private record ProductValAndStatus(Double val, String status) {}

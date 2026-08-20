@@ -11,4 +11,5 @@ public interface RawLoanRepo extends MongoRepository<RawLoanCustomer, String> {
     List<RawLoanCustomer> findByNormalizedPan(String pan);
     List<RawLoanCustomer> findByNormalizedMobile(String mobile);
     List<RawLoanCustomer> findByNormalizedEmail(String email);
+    java.util.Optional<RawLoanCustomer> findBySourceCustomerId(String sourceCustomerId);
 }

@@ -11,4 +11,5 @@ public interface RawMfRepo extends MongoRepository<RawMfCustomer, String> {
     List<RawMfCustomer> findByNormalizedPan(String pan);
     List<RawMfCustomer> findByNormalizedMobile(String mobile);
     List<RawMfCustomer> findByNormalizedEmail(String email);
+    java.util.Optional<RawMfCustomer> findBySourceCustomerId(String sourceCustomerId);
 }

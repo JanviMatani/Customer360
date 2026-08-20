@@ -108,6 +108,46 @@ public class ConfigService {
         return rules;
     }
 
+    /**
+     * Returns the raw opportunity-rules config document (for GET endpoint and audit before/after).
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getOpportunityRulesRaw() {
+        Map<String, Object> doc = mongo.findById(OPP_RULES_ID, Map.class, COLLECTION);
+        if (doc == null) return Map.of("_id", OPP_RULES_ID, "rules", List.of());
+        return doc;
+    }
+
+    // ─── Scoring weights ─────────────────────────────────────────────────
+
+    /**
+     * Returns the opportunity scoring weights sub-map.
+     * Stored under the opportunity-rules-v1 document as "scoringWeights".
+     * Defaults: potential=40, relationship=25, recency=20, engagement=15
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getScoringWeights() {
+        Map<String, Object> doc = getOpportunityRulesRaw();
+        Object sw = doc.get("scoringWeights");
+        if (sw instanceof Map<?, ?> map) {
+            Map<String, Object> result = new java.util.LinkedHashMap<>();
+            map.forEach((k, v) -> result.put(k.toString(), v));
+            return result;
+        }
+        return defaultScoringWeights();
+    }
+
+    private Map<String, Object> defaultScoringWeights() {
+        Map<String, Object> m = new java.util.LinkedHashMap<>();
+        m.put("potential",          40);
+        m.put("relationship",       25);
+        m.put("recency",            20);
+        m.put("engagement",         15);
+        m.put("maxPotentialValue",  2000000);
+        m.put("maxRelationshipValue", 2000000);
+        return m;
+    }
+
     // ─── Config update ────────────────────────────────────────────────────
 
     /**

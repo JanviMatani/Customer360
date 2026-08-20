@@ -74,7 +74,7 @@ public class OpportunityController {
             List<String> visibleRmIds = dataScopeService.visibleRmIds(principal);
             if (product != null && !product.isBlank()) {
                 // filter by rmId and product
-                result = opportunityRepo.findByRmIdAndProduct(visibleRmIds.get(0), product.toLowerCase(), pageable);
+                result = opportunityRepo.findByRmIdInAndProduct(visibleRmIds, product.toLowerCase(), pageable);
             } else {
                 result = opportunityRepo.findByRmIdIn(visibleRmIds, pageable);
             }

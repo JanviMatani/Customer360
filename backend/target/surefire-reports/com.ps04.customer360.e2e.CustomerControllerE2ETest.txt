@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.ps04.customer360.e2e.CustomerControllerE2ETest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.70 s -- in com.ps04.customer360.e2e.CustomerControllerE2ETest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.319 s -- in com.ps04.customer360.e2e.CustomerControllerE2ETest
