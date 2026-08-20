@@ -1,0 +1,19 @@
+wealth_customer_id,customer_name,pan,mobile,email,dob,city,age_band,relationship_value,wealth_account_id,portfolio_status,segment,rm_id
+WEA3001,Rahul Sharma,ABC12345,9876543210,rahul@gmail.com,1998-05-12,Mumbai,25-34,1200000,WACC301,Active,Premium,RM101
+WEA3002,Priya Mehta,,9988776655,priya@gmail.com,1997-03-10,Pune,25-34,800000,WACC302,Active,Affluent,RM101
+WEA3003,Aarav Desai,PAN_NOT_AVAILABLE,9876001122,,1995-11-22,Nashik,25-34,650000,WACC303,Active,Mass,RM101
+WEA3004,Sneha Iyer,,,1992-07-18,Bengaluru,25-34,1500000,WACC304,Active,Affluent,RM101
+WEA3005,Karan Patel,GHI67890,9823011223,karan@gmail.com,1989-09-20,Ahmedabad,35-44,2200000,WACC305,Active,Affluent,RM106
+WEA3006,Ms. Neha Kulkarni,PQR77889,9822044556,neha.kulkarni@gmail.com,1994-02-28,Pune,25-34,900000,WACC306,Active,Affluent,RM101
+WEA3007,Meera Nair,YZA55667,9555544444,meera@gmail.com,1990-06-03,Bengaluru,35-44,1800000,WACC307,Active,Affluent,RM101
+WEA3008,Ishita Rao,BCD33445,9444433333,ishita@gmail.com,1996-12-11,Hyderabad,25-34,500000,WACC308,Inactive,Affluent,RM101
+WEA3009,Vivek Menon,CDE44556,9333322222,vivek@gmail.com,1985-04-19,Chennai,35-44,1400000,WACC309,Active,Affluent,RM101
+WEA3010,Ananya Singh,DEF55667,9222211111,ananya@gmail.com,1999-09-07,Delhi,25-34,2100000,WACC310,Active,Premium,RM101
+WEA3011,Mohit Gupta,EFG66778,9111100000,mohit@gmail.com,1993-03-25,Jaipur,25-34,600000,WACC311,Active,Mass,RM101
+WEA3012,Sonal Kapoor,FGH77889,9000099999,,1987-08-30,Mumbai,35-44,1100000,WACC312,Active,Affluent,RM101
+WEA3013,Dev Malhotra,GHI88990,8999988888,dev@gmail.com,1991-11-05,Gurugram,25-34,4500000,WACC313,Active,HNI,RM101
+WEA3014,Rahul Sharma,ABC12345,9876543210,rahul@gmail.com,1998-05-12,Mumbai,25-34,1000000,WACC314,Active,Premium,RM101
+WEA3015,Rahul Sharma,STU99110,9777766666,rahul.s.delhi@gmail.com,1979-10-14,Delhi,45-54,500000,WACC315,Active,Mass,RM101
+WEA3016,Amit Patil,JKL11223,9876543210,amit@gmail.com,1989-09-20,Mumbai,35-44,400000,WACC316,Active,Mass,RM101
+WEA3017,Rahul Sharma,ABC12345,9876543210,rahul@gmail.com,1998-05-12,Mumbai,25-34,800000,WACC317,Active,Premium,RM101
+WEA3018,Rahul Sharmai,MNO44556,9123456780,rahul.sharmai@gmail.com,1980-02-17,Pune,45-54,600000,WACC318,Active,Mass,RM101

@@ -1,0 +1,19 @@
+loan_customer_id,customer_name,pan,mobile,email,dob,city,age_band,loan_amount,loan_account_id,loan_status,loan_type,segment,rm_id
+LOAN2001,Rahul Sharma,ABC12345,9876543210,rahul@gmail.com,1998-05-12,Mumbai,25-34,350000,LN8001,Active,Home,Premium,RM101
+LOAN2002,Priya Mehta,,9988776655,priya@gmail.com,1997-03-10,Pune,25-34,150000,LN8002,Active,Personal,Affluent,RM101
+LOAN2003,Aarav Desai,PAN_NOT_AVAILABLE,9876001122,,1995-11-22,Nashik,25-34,200000,LN8003,Active,Car,Mass,RM101
+LOAN2004,Sneha Iyer,,,1992-07-18,Bengaluru,25-34,500000,LN8004,Active,Home,Affluent,RM101
+LOAN2005,Karan Patel,GHI67890,9823011223,karan@gmail.com,1989-09-20,Ahmedabad,35-44,800000,LN8005,Active,Car,Affluent,RM106
+LOAN2006,Ms. Neha Kulkarni,PQR77889,9822044556,neha.kulkarni@gmail.com,1994-02-28,Pune,25-34,400000,LN8006,Active,Personal,Affluent,RM101
+LOAN2007,Meera Nair,YZA55667,9555544444,meera@gmail.com,1990-06-03,Bengaluru,35-44,600000,LN8007,Active,Home,Affluent,RM101
+LOAN2008,Ishita Rao,BCD33445,9444433333,ishita@gmail.com,1996-12-11,Hyderabad,25-34,300000,LN8008,Closed,Car,Affluent,RM101
+LOAN2009,Vivek Menon,CDE44556,9333322222,vivek@gmail.com,1985-04-19,Chennai,35-44,700000,LN8009,Active,Home,Affluent,RM101
+LOAN2010,Ananya Singh,DEF55667,9222211111,ananya@gmail.com,1999-09-07,Delhi,25-34,250000,LN8010,Active,Personal,Premium,RM101
+LOAN2011,Ananya Singh,DEF55667,9222211111,ananya@gmail.com,1999-09-07,Delhi,25-34,900000,LN8011,Active,Car,Premium,RM101
+LOAN2012,Mohit Gupta,EFG66778,9111100000,mohit@gmail.com,1993-03-25,Jaipur,25-34,180000,LN8012,Lapsed,Personal,Mass,RM101
+LOAN2013,Sonal Kapoor,FGH77889,9000099999,,1987-08-30,Mumbai,35-44,450000,LN8013,Active,Car,Affluent,RM101
+LOAN2014,Dev Malhotra,GHI88990,8999988888,dev@gmail.com,1991-11-05,Gurugram,25-34,1500000,LN8014,Active,Home,HNI,RM101
+LOAN2015,Rahul Sharma,STU99110,9777766666,rahul.s.delhi@gmail.com,1979-10-14,Delhi,45-54,300000,LN8015,Active,Car,Mass,RM101
+LOAN2016,Amit Patil,JKL11223,9876543210,amit@gmail.com,1989-09-20,Mumbai,35-44,250000,LN8016,Active,Personal,Mass,RM101
+LOAN2017,Rahul Sharma,ABC12345,9876543210,rahul@gmail.com,1998-05-12,Mumbai,25-34,200000,LN8017,Active,Personal,Premium,RM101
+LOAN2018,Rahul Sharmai,MNO44556,9123456780,rahul.sharmai@gmail.com,1980-02-17,Pune,45-54,350000,LN8018,Active,Personal,Mass,RM101
