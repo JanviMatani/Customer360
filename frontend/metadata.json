@@ -1,0 +1,6 @@
+{
+  "name": "Financial Customer 360 & Opportunity Engine",
+  "description": "Financial Customer 360 identity resolution, probabilistic matching, conflict management, and explainable next-best-opportunity engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

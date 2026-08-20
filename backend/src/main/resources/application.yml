@@ -1,0 +1,25 @@
+server:
+  port: 8000
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017/customer360}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:ps04-customer360-dev-secret-key-minimum-256-bit-length-here-123456}
+    expiration-ms: 1800000   # 30 minutes
+  security:
+    max-failed-logins: 5
+    lockout-duration-minutes: 30
+  source-precedence:
+    - EQUITY
+    - WEALTH
+    - MF
+    - INSURANCE
+    - LOANS

@@ -1,0 +1,20 @@
+insurance_customer_id,customer_name,pan,mobile,email,dob,city,age_band,sum_assured,policy_id,policy_status,policy_type,segment,rm_id
+INS2001,Rahul Sharma,ABC12345,9876543210,rahul.work@gmail.com,1998-05-12,Mumbai,25-34,500000,POL9001,Active,Life,Premium,RM101
+INS2002,Priya Mehta,,+91-99887-76655,priya@gmail.com,1997-03-10,Pune,25-34,300000,POL9002,Active,Health,Affluent,RM101
+INS2003,Rhaul Sharma,ABC12345,9876543210,rahul.alt@gmail.com,12/05/1998,Mumbai,25-34,500000,POL9003,Active,Life,Premium,RM101
+INS2005,Amit Patil,JKL11223,9876543210,amit@gmail.com,1989-09-20,Mumbai,35-44,200000,POL9005,Active,Health,Mass,RM101
+INS2006,Aarav Desai,PAN_NOT_AVAILABLE,9876001122,,1995-11-22,Nashik,25-34,150000,POL9006,Active,Motor,Mass,RM101
+INS2007,Sneha Iyer,,,1992-07-18,Bengaluru,25-34,1000000,POL9007,Active,Health,Affluent,RM101
+INS2008,Karan Patel,GHI67890,9823011223,karan@gmail.com,,Ahmedabad,35-44,1500000,POL9008,Active,Life,Affluent,RM106
+INS2009," Ms. Neha Kulkarni ",PQR77889,9822044556,neha.kulkarni@gmail.com,28/02/1994,Pune,25-34,600000,POL9009,Active,Health,Affluent,RM101
+INS2010,Rahul Sharma,STU99110,9777766666,rahul.s.delhi@gmail.com,1979-10-14,Delhi,45-54,500000,POL9010,Active,Life,Mass,RM101
+INS2011,Meera Nair,YZA55667,9555544444,meera@gmail.com,1990-06-03,Bengaluru,35-44,1200000,POL9011,Active,Health,Affluent,RM101
+INS2012,Ananya Singh,DEF55667,9222211111,ananya@gmail.com,1999-09-07,Delhi,25-34,2000000,POL9012,Active,Life,Premium,RM101
+INS2012,Ananya Singh,DEF55667,9222211111,ananya@gmail.com,1999-09-07,Delhi,25-34,1000000,POL9013,Active,Health,Premium,RM101
+INS2013,Mohit Gupta,EFG66778,,mohit@gmail.com,1993-03-25,Jaipur,25-34,400000,POL9014,Active,Motor,Mass,RM101
+INS2014,Sonal Kapoor,FGH77889,9000099999,,1987-08-30,Mumbai,35-44,800000,POL9015,Active,Health,Affluent,RM101
+INS2015,Rahul Sharmai,VWX11223,8888811111,rahul.kol@gmail.com,1980-01-22,Kolkata,45-54,300000,POL9016,Active,Life,Mass,RM101
+INS2016,Vivek Menon,CDE44556,9333322222,vivek@gmail.com,1985-04-19,Chennai,35-44,750000,POL9017,LAPSED,Life,Affluent,RM101
+INS2017,Dev Malhotra,GHI88990,8999988888,dev@gmail.com,1991-11-05,Gurugram,25-34,5000000,POL9018,Active,Life,HNI,RM101
+INS2017,Dev Malhotra,GHI88990,8999988888,dev@gmail.com,1991-11-05,Gurugram,25-34,5000000,POL9018,Active,Life,HNI,RM101
+INS2019,Karan Patel,GHI67890,9823011223,karan@gmail.com,,Ahmedabad,35-44,1000000,POL9019,Active,Health,Affluent,RM106
