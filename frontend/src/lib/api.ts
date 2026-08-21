@@ -125,6 +125,8 @@ export const reviewApi = {
 
 // =================== OPPORTUNITIES API ===================
 export const opportunitiesApi = {
+  explainOpportunity: (goldenId: string) =>
+    request<import('../types').NoOpportunityExplanation>(`/api/opportunities/explain/${goldenId}`),
   list: (params?: { rmId?: string; status?: string; product?: string; page?: number; limit?: number }) => {
     const query = new URLSearchParams();
     if (params?.rmId) query.set('rmId', params.rmId);

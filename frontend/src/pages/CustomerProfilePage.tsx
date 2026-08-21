@@ -26,6 +26,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { useCustomer, useCustomerOpportunities } from '../hooks/useCustomers';
+import { useOpportunityExplain } from '../hooks/useOpportunities';
 import { useAuditLogs } from '../hooks/useAudit';
 import { ConfidenceBadge } from '../components/shared/ConfidenceBadge';
 import { SourceBadge } from '../components/shared/SourceBadge';
@@ -51,6 +52,7 @@ export const CustomerProfilePage: React.FC = () => {
   const [conflictStatusFilter, setConflictStatusFilter] = useState('All');
 
   const [newNote, setNewNote] = useState('');
+  const [showPitchMap, setShowPitchMap] = useState<Record<string, boolean>>({});
   const [localNotes, setLocalNotes] = useState<Array<{ id: string; text: string; author: string; date: string }>>([
     {
       id: 'n1',
@@ -63,6 +65,8 @@ export const CustomerProfilePage: React.FC = () => {
   const { data: customer, isLoading, error } = useCustomer(goldenId);
   const { data: opportunities = [] } = useCustomerOpportunities(goldenId);
   const { data: auditData } = useAuditLogs({ search: goldenId, limit: 10 });
+  // Must be called here — before any early returns — to satisfy React hooks rules
+  const { data: oppExplain } = useOpportunityExplain(goldenId);
 
   if (isLoading) {
     return (
@@ -88,7 +92,7 @@ export const CustomerProfilePage: React.FC = () => {
     );
   }
 
-  const confidenceScore = customer.confidenceScore ?? customer.matchConfidence ?? 96;
+  const confidenceScore = customer.confidenceScore ?? customer.matchConfidence ?? 0;
   const sources = customer.sourceSystems || customer.linkedSources || ['equity', 'mf', 'loans'];
   const holdings = customer.productHoldings || customer.holdings || [];
   const conflicts = customer.attributeConflicts || customer.conflicts || [];
@@ -150,240 +154,63 @@ export const CustomerProfilePage: React.FC = () => {
   ];
 
   // Evidence list according to identity_evidence.jpg
-  const evidenceList = [
-    {
-      id: 'ev-1',
-      category: 'primary',
-      type: 'PAN Card',
-      subtitle: 'Primary Identity',
-      docDetail: 'ABCDE1234F',
-      name: 'Rahul Sharma',
-      source: 'EQ',
-      verifiedOn: '20 May 2026, 10:15 AM',
-      verifiedSub: 'Auto Verified',
-      status: 'Verified',
-      confidence: 98,
-    },
-    {
-      id: 'ev-2',
-      category: 'primary',
-      type: 'Aadhaar Card',
-      subtitle: 'Primary Identity',
-      docDetail: 'XXXX XXXX 4321',
-      name: 'Rahul Sharma',
-      source: 'EQ',
-      verifiedOn: '20 May 2026, 10:14 AM',
-      verifiedSub: 'Auto Verified',
-      status: 'Verified',
-      confidence: 96,
-    },
-    {
-      id: 'ev-3',
-      category: 'address',
-      type: 'Address Proof',
-      subtitle: 'Utility Bill',
-      docDetail: 'Electricity Bill - Aug 2025',
-      name: 'Rahul Sharma',
-      source: 'EQ',
-      verifiedOn: '18 May 2026, 04:22 PM',
-      verifiedSub: 'Auto Verified',
-      status: 'Verified',
-      confidence: 92,
-    },
-    {
-      id: 'ev-4',
-      category: 'contact',
-      type: 'Mobile Number',
-      subtitle: 'Contact Evidence',
-      docDetail: '98765 43210',
-      name: 'Primary Mobile',
-      source: 'EQ',
-      verifiedOn: '18 May 2026, 04:21 PM',
-      verifiedSub: 'OTP Verified',
-      status: 'Verified',
-      confidence: 95,
-    },
-    {
-      id: 'ev-5',
-      category: 'contact',
-      type: 'Email Address',
-      subtitle: 'Contact Evidence',
-      docDetail: 'rahul.sharma@email.com',
-      name: 'Primary Email',
-      source: 'MF',
-      verifiedOn: '17 May 2026, 11:08 AM',
-      verifiedSub: 'Email Verified',
-      status: 'Verified',
-      confidence: 93,
-    },
-    {
-      id: 'ev-6',
-      category: 'financial',
-      type: 'Bank Statement',
-      subtitle: 'Financial Evidence',
-      docDetail: 'Savings A/c Statement',
-      name: 'Mar 2026',
-      source: 'EQ',
-      verifiedOn: '16 May 2026, 09:30 AM',
-      verifiedSub: 'Document Verified',
-      status: 'Pending Review',
-      confidence: 85,
-    },
-    {
-      id: 'ev-7',
-      category: 'primary',
-      type: 'Passport',
-      subtitle: 'Primary Identity',
-      docDetail: 'P1234567',
-      name: 'Rahul Sharma',
-      source: 'LN',
-      verifiedOn: 'Not Verified',
-      verifiedSub: '',
-      status: 'Not Verified',
-      confidence: 0,
-    },
-    {
-      id: 'ev-8',
-      category: 'address',
-      type: 'Address Proof',
-      subtitle: 'Utility Bill',
-      docDetail: 'Water Bill - Jul 2024',
-      name: '12, Green Park, New Delhi',
-      source: 'LN',
-      verifiedOn: 'Not Verified',
-      verifiedSub: '',
-      status: 'Expired',
-      confidence: 0,
-    },
-  ];
+  // ─── Real data from MongoDB — no hardcoded fallbacks ───────────────────────
 
-  // Conflict list according to conflicts.jpg
-  const conflictList = [
-    {
-      id: 'CNF-000123',
-      type: 'Duplicate PAN',
-      description: 'Same PAN linked to multiple customer profiles',
-      matchedWith: 'Amit Verma',
-      matchedSub: 'PAN: ABCDE1234F',
-      source: 'EQ',
-      risk: 'High',
-      detectedOn: '20 May 2026, 10:18 AM',
-      status: 'Open',
-    },
-    {
-      id: 'CNF-000124',
-      type: 'Shared Mobile',
-      description: 'Mobile number used by multiple customers',
-      matchedWith: 'Priya Mehta',
-      matchedSub: 'Mobile: 98765 43210',
-      source: 'MF',
-      risk: 'Medium',
-      detectedOn: '20 May 2026, 10:17 AM',
-      status: 'Open',
-    },
-    {
-      id: 'CNF-000125',
-      type: 'Address Overlap',
-      description: 'High similarity in address with another customer',
-      matchedWith: 'Neha Iyer',
-      matchedSub: 'Address: 12, Green Park...',
-      source: 'LN',
-      risk: 'Medium',
-      detectedOn: '19 May 2026, 04:35 PM',
-      status: 'In Review',
-    },
-    {
-      id: 'CNF-000126',
-      type: 'Name Similarity',
-      description: 'High similarity in name (Phonetic match)',
-      matchedWith: 'Rahul Sharmaa',
-      matchedSub: 'Similarity Score: 92%',
-      source: 'EQ',
-      risk: 'Low',
-      detectedOn: '18 May 2026, 02:21 PM',
-      status: 'Open',
-    },
-    {
-      id: 'CNF-000127',
-      type: 'Email Overlap',
-      description: 'Email address used by another customer',
-      matchedWith: 'Vikram Singh',
-      matchedSub: 'Email: rahul.sharma@email.com',
-      source: 'MF',
-      risk: 'High',
-      detectedOn: '17 May 2026, 11:08 AM',
-      status: 'Open',
-    },
-  ];
+  // Identity evidence: use the real field-level match evidence from the backend
+  // Each item from the backend has: field, weight, valueA, valueB, result, similarity
+  const evidenceList = evidence.map((ev, i) => ({
+    id: `ev-${i + 1}`,
+    category: ['pan', 'dob'].includes(ev.field) ? 'primary'
+            : ['mobile', 'email'].includes(ev.field) ? 'contact'
+            : 'financial',
+    type: ev.field === 'pan' ? 'PAN'
+        : ev.field === 'mobile' ? 'Mobile Number'
+        : ev.field === 'email' ? 'Email Address'
+        : ev.field === 'dob' ? 'Date of Birth'
+        : ev.field === 'name' ? 'Full Name'
+        : ev.field === 'city' ? 'City'
+        : ev.field,
+    subtitle: `Weight: ${ev.weight} pts`,
+    docDetail: ev.valueA ?? '—',
+    name: ev.valueB ?? '—',
+    source: sources[0]?.toUpperCase() ?? 'EQ',
+    verifiedOn: '—',
+    verifiedSub: ev.result === 'match' ? 'Auto Matched' : ev.result === 'conflict' ? 'Conflict Detected' : ev.result,
+    status: ev.result === 'match' ? 'Verified' : ev.result === 'conflict' ? 'Conflict' : ev.result === 'partial' ? 'Partial' : 'Missing',
+    confidence: ev.result === 'match' ? 100 : ev.result === 'partial' ? Math.round((ev.similarity ?? 0.5) * 100) : 0,
+  }));
 
-  // Opportunities list according to opportunities.jpg
-  const fullOpportunities = [
-    {
-      id: 'opp-1',
-      title: 'Term Insurance Plan',
-      priority: 'High Priority',
-      subtitle: "Protect your family's future",
-      score: 92,
-      scoreTone: 'Very High',
-      potentialValue: '₹1,20,000',
-      potentialLabel: 'Annual Premium',
-      conditions: ['Age 30–50', 'Income > ₹5 LPA', 'No existing term plan'],
-      why: "You don't have a term insurance plan. This plan can provide ₹1 Cr cover at an affordable premium.",
-      moreReasons: '+2 more reasons',
-    },
-    {
-      id: 'opp-2',
-      title: 'SIP in Equity Funds',
-      priority: 'High Priority',
-      subtitle: 'Grow wealth with disciplined investing',
-      score: 88,
-      scoreTone: 'Very High',
-      potentialValue: '₹75,000',
-      potentialLabel: 'Est. 1 Year Value',
-      conditions: ['Investment horizon > 3 yrs', 'Risk appetite: Moderate to High', 'No active SIP'],
-      why: 'Your investment horizon and risk profile are suitable for equity funds. SIPs can help you build long-term wealth.',
-      moreReasons: '+1 more reason',
-    },
-    {
-      id: 'opp-3',
-      title: 'Premium Credit Card',
-      priority: 'Medium Priority',
-      subtitle: 'Earn more rewards & lifestyle benefits',
-      score: 72,
-      scoreTone: 'High',
-      potentialValue: '₹12,000',
-      potentialLabel: 'Est. Annual Benefits',
-      conditions: ['Income > ₹4 LPA', 'Good credit profile', 'No premium card'],
-      why: 'You can earn up to 12,000 reward points annually along with airport lounge and dining benefits.',
-      moreReasons: '',
-    },
-    {
-      id: 'opp-4',
-      title: 'Home Loan Balance Transfer',
-      priority: 'Medium Priority',
-      subtitle: 'Lower your EMI and save on interest',
-      score: 64,
-      scoreTone: 'Medium',
-      potentialValue: '₹48,000',
-      potentialLabel: 'Est. Annual Savings',
-      conditions: ['Active home loan', 'Interest rate > 8%', 'CIBIL score > 750'],
-      why: 'You could save up to ₹48,000 per year by transferring your home loan to a lower interest rate.',
-      moreReasons: '+1 more reason',
-    },
-    {
-      id: 'opp-5',
-      title: 'Personal Loan',
-      priority: 'Low Priority',
-      subtitle: 'Funds for your personal needs',
-      score: 38,
-      scoreTone: 'Low',
-      potentialValue: '₹2,00,000',
-      potentialLabel: 'Loan Amount',
-      conditions: ['Income > ₹3 LPA', 'Existing relationship > 1 yr', 'KYC up to date'],
-      why: 'You may be eligible for a personal loan with competitive interest rates for your needs.',
-      moreReasons: '',
-    },
-  ];
+  // Attribute conflicts: use real attribute conflicts from the backend
+  // Each conflict has: field, selectedValue, selectedSource, conflictingValues[]
+  const conflictList = conflicts.map((c, i) => ({
+    id: `CNF-${String(i + 1).padStart(6, '0')}`,
+    type: `${c.field.charAt(0).toUpperCase() + c.field.slice(1)} Conflict`,
+    description: `Source systems disagree on ${c.field}. Value retained by source precedence.`,
+    matchedWith: c.conflictingValues?.[0]?.source ?? '—',
+    matchedSub: `${c.field}: ${c.conflictingValues?.[0]?.value ?? '—'}`,
+    source: c.selectedSource?.toUpperCase() ?? '—',
+    risk: c.field === 'pan' ? 'High' : c.field === 'mobile' ? 'Medium' : 'Low',
+    detectedOn: '—',
+    status: 'Open',
+  }));
+
+  // Opportunities: use real opportunities from the backend (already fetched)
+  // Map backend Opportunity → display shape used by the Opportunities tab
+  const fullOpportunities = opportunities.map((opp) => ({
+    id: opp.id,
+    title: `${opp.product.charAt(0).toUpperCase() + opp.product.slice(1)} Cross-sell`,
+    priority: opp.score >= 75 ? 'High Priority' : opp.score >= 55 ? 'Medium Priority' : 'Low Priority',
+    subtitle: opp.reasons?.[0]?.label ?? 'Rule-based opportunity',
+    score: opp.score,
+    scoreTone: opp.score >= 80 ? 'Very High' : opp.score >= 60 ? 'High' : 'Medium',
+    potentialValue: opp.potentialValue
+      ? `₹${(opp.potentialValue / 100000).toFixed(2)}L`
+      : '—',
+    potentialLabel: 'Estimated Potential',
+    conditions: opp.reasons?.map((r) => r.label) ?? [],
+    why: opp.reasons?.find((r) => r.met)?.label ?? 'Rule-based cross-sell opportunity.',
+    moreReasons: opp.reasons && opp.reasons.length > 2 ? `+${opp.reasons.length - 2} more reasons` : '',
+  }));
 
   const profileHeader = (
     <div className="p-4 space-y-4">
@@ -435,9 +262,9 @@ export const CustomerProfilePage: React.FC = () => {
               </span>
             </div>
             <div className="text-[10px] text-gray-500 font-mono mt-0.5 flex gap-3">
-              <span>Mobile: {customer.mobile || '98765 43210'}</span>
+              <span>Mobile: {customer.mobile || 'Not available'}</span>
               <span>•</span>
-              <span>PAN: {customer.pan || 'ABCDE1234F'}</span>
+              <span>PAN: {customer.pan || 'Not available'}</span>
             </div>
           </div>
         </div>
@@ -470,7 +297,7 @@ export const CustomerProfilePage: React.FC = () => {
         <div className="col-span-2 space-y-0.5 text-right">
           <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Holdings TRV</div>
           <div className="font-mono text-xs font-bold text-emerald-800">
-            {formatCurrency(customer.totalRelationshipValue || 1245000)}
+            {formatCurrency(customer.totalRelationshipValue || 0)}
           </div>
         </div>
       </div>
@@ -490,122 +317,71 @@ export const CustomerProfilePage: React.FC = () => {
           <ProductStrip holdings={holdings} totalRelationshipValue={customer.totalRelationshipValue} />
 
           <div className="grid grid-cols-12 gap-4">
-            {/* Card 1: Product Holdings */}
-            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col justify-between space-y-3">
-              <div>
-                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
-                  <CreditCard size={14} className="text-[#1B4FD8]" />
-                  <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-                    Holdings Details
-                  </h3>
-                </div>
-
-                <div className="divide-y divide-gray-50 text-[11px] mt-2">
+            {/* Card 1: Real Product Holdings from MongoDB */}
+            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col space-y-3">
+              <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
+                <CreditCard size={14} className="text-[#1B4FD8]" />
+                <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Holdings Details</h3>
+              </div>
+              {holdings.length === 0 ? (
+                <p className="text-xs text-gray-400 italic">No active product holdings found for this customer.</p>
+              ) : (
+                <div className="divide-y divide-gray-50 text-[11px]">
                   <div className="grid grid-cols-4 py-1.5 font-bold uppercase tracking-wider text-gray-400 text-[9px]">
                     <span className="col-span-2">Product</span>
                     <span>Status</span>
                     <span className="text-right">Balance</span>
                   </div>
-                  <div className="grid grid-cols-4 py-1.5 items-center">
-                    <span className="col-span-2 font-bold text-gray-900">Savings Account</span>
-                    <span className="text-emerald-700 font-bold">● Active</span>
-                    <span className="font-mono text-right font-semibold">₹2,15,000</span>
-                  </div>
-                  <div className="grid grid-cols-4 py-1.5 items-center">
-                    <span className="col-span-2 font-bold text-gray-900">Current Account</span>
-                    <span className="text-emerald-700 font-bold">● Active</span>
-                    <span className="font-mono text-right font-semibold">₹1,10,000</span>
-                  </div>
-                  <div className="grid grid-cols-4 py-1.5 items-center">
-                    <span className="col-span-2 font-bold text-gray-900">Mutual Fund</span>
-                    <span className="text-emerald-700 font-bold">● Active</span>
-                    <span className="font-mono text-right font-semibold">₹6,75,000</span>
-                  </div>
-                  <div className="grid grid-cols-4 py-1.5 items-center">
-                    <span className="col-span-2 font-bold text-gray-900">Term Insurance</span>
-                    <span className="text-emerald-700 font-bold">● Active</span>
-                    <span className="font-mono text-right font-semibold">₹2,45,000</span>
-                  </div>
+                  {holdings.map((h, i) => (
+                    <div key={i} className="grid grid-cols-4 py-1.5 items-center">
+                      <span className="col-span-2 font-bold text-gray-900 capitalize">{h.product}</span>
+                      <span className={h.active ? 'text-emerald-700 font-bold' : 'text-gray-400 font-bold'}>
+                        {h.active ? '● Active' : '● Inactive'}
+                      </span>
+                      <span className="font-mono text-right font-semibold">{formatCurrency(h.balance)}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
 
-            {/* Card 2: Relationship Value Breakdown */}
-            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col justify-between space-y-3">
-              <div>
-                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
-                  <TrendingUp size={14} className="text-[#1B4FD8]" />
-                  <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-                    Asset Allocation
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-4 mt-3">
-                  <div className="relative w-20 h-20 shrink-0 flex items-center justify-center">
-                    <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                      <path
-                        className="text-[#1B4FD8]"
-                        strokeDasharray="54, 100"
-                        strokeWidth="4"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className="text-[#10B981]"
-                        strokeDasharray="17, 100"
-                        strokeDashoffset="-54"
-                        strokeWidth="4"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className="text-[#F59E0B]"
-                        strokeDasharray="20, 100"
-                        strokeDashoffset="-71"
-                        strokeWidth="4"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className="text-[#6366F1]"
-                        strokeDasharray="9, 100"
-                        strokeDashoffset="-91"
-                        strokeWidth="4"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                    </svg>
-                  </div>
-
-                  <div className="space-y-1 text-[10px] flex-1 font-semibold text-gray-700">
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#1B4FD8]" />
-                        <span>Mutual Funds</span>
-                      </span>
-                      <span className="font-mono text-gray-500">54%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                        <span>Savings Accounts</span>
-                      </span>
-                      <span className="font-mono text-gray-500">17%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
-                        <span>Insurance</span>
-                      </span>
-                      <span className="font-mono text-gray-500">20%</span>
-                    </div>
-                  </div>
-                </div>
+            {/* Card 2: Real Asset Allocation computed from live holdings */}
+            <div className="col-span-4 p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex flex-col space-y-3">
+              <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2">
+                <TrendingUp size={14} className="text-[#1B4FD8]" />
+                <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Asset Allocation</h3>
               </div>
+              {holdings.length === 0 ? (
+                <p className="text-xs text-gray-400 italic">No holdings data available.</p>
+              ) : (() => {
+                const total = holdings.reduce((sum, h) => sum + h.balance, 0);
+                const colors = ['#1B4FD8', '#10B981', '#F59E0B', '#6366F1', '#EF4444'];
+                return (
+                  <div className="space-y-2 text-[10px] font-semibold text-gray-700">
+                    {holdings.map((h, i) => {
+                      const pct = total > 0 ? Math.round((h.balance / total) * 100) : 0;
+                      return (
+                        <div key={i} className="space-y-0.5">
+                          <div className="flex items-center justify-between">
+                            <span className="flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full" style={{ background: colors[i % colors.length] }} />
+                              <span className="capitalize">{h.product}</span>
+                            </span>
+                            <span className="font-mono text-gray-500">{pct}%</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-1">
+                            <div className="h-1 rounded-full" style={{ width: `${pct}%`, background: colors[i % colors.length] }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div className="pt-1 border-t border-gray-100 flex justify-between text-gray-400">
+                      <span>Total Relationship Value</span>
+                      <span className="font-mono font-bold text-emerald-700">{formatCurrency(total)}</span>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Card 3: Key Identity Summary */}
@@ -782,64 +558,201 @@ export const CustomerProfilePage: React.FC = () => {
       {/* TAB 4: OPPORTUNITIES */}
       {activeTab === 'opportunities' && (
         <div className="space-y-4 animate-in fade-in duration-150">
+
+          {/* Header */}
           <div className="p-4 rounded-lg bg-white border border-gray-200 shadow-2xs flex items-center justify-between">
             <div>
               <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-                Cross-Sell Recommendations for {customer.name}
+                Next-Best-Opportunity Engine — {customer.name}
               </h3>
               <p className="text-[10px] text-gray-400">
-                AI product affinity & financial propensity analytics engine
+                Rule-based cross-sell intelligence from real-time multi-silo relationship data
               </p>
+            </div>
+            <div className="text-right">
+              <div className="text-xl font-mono font-bold text-[#1B4FD8]">{fullOpportunities.length}</div>
+              <div className="text-[10px] text-gray-400">Active Opportunities</div>
             </div>
           </div>
 
-          <div className="rounded-lg bg-white border border-gray-200 shadow-2xs overflow-hidden">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-gray-200 bg-gray-50 text-gray-500 uppercase tracking-wider font-bold">
-                  <th className="py-2.5 px-4">Recommended Product</th>
-                  <th className="py-2.5 px-4 text-center">Propensity Score</th>
-                  <th className="py-2.5 px-4 text-right">Potential Value</th>
-                  <th className="py-2.5 px-4">Eligibility Mapped</th>
-                  <th className="py-2.5 px-4">Justification</th>
-                  <th className="py-2.5 px-4 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-gray-700">
-                {fullOpportunities.map((opp) => (
-                  <tr key={opp.id} className="hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div className="font-bold text-gray-900">{opp.title}</div>
-                      <div className="text-[10px] text-gray-400 font-medium">{opp.subtitle}</div>
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <div className="font-mono font-bold text-[#1B4FD8]">{opp.score}%</div>
-                      <span className="text-[9px] text-gray-400 font-semibold">{opp.scoreTone}</span>
-                    </td>
-                    <td className="py-3 px-4 text-right font-mono font-bold text-emerald-700">
-                      {opp.potentialValue}
-                    </td>
-                    <td className="py-3 px-4 space-y-0.5">
-                      {opp.conditions.slice(0, 2).map((c, i) => (
-                        <div key={i} className="flex items-center gap-1 text-[10px] text-gray-600 font-medium">
-                          <CheckCircle2 size={10} className="text-emerald-600" />
-                          <span>{c}</span>
+          {/* Case A: Customer HAS opportunities */}
+          {fullOpportunities.length > 0 && (
+            <div className="space-y-3">
+              {fullOpportunities.map((opp) => {
+                const rawOpp = opportunities.find(o => o.id === opp.id);
+                const showPitch = showPitchMap[opp.id] ?? false;
+                return (
+                  <div key={opp.id} className="rounded-lg bg-white border border-gray-200 shadow-2xs overflow-hidden">
+                    {/* Opportunity header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
+                      <div className="flex items-center gap-3">
+                        <div className="px-2 py-0.5 rounded bg-[#EBF1FA] border border-[#BCD1F0] text-[#1B4FD8] text-[10px] font-bold uppercase">
+                          {opp.priority}
                         </div>
-                      ))}
-                    </td>
-                    <td className="py-3 px-4 text-[10px] text-gray-500 max-w-[200px] truncate leading-relaxed">
-                      {opp.why}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <button className="px-2.5 py-1 rounded bg-[#1B4FD8] hover:bg-[#113CAD] text-white text-2xs font-bold cursor-pointer">
-                        Offer
+                        <div>
+                          <div className="font-bold text-gray-900 text-sm">{opp.title}</div>
+                          <div className="text-[10px] text-gray-400">{opp.subtitle}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <div className="font-mono font-bold text-[#1B4FD8] text-lg">{opp.score}%</div>
+                          <div className="text-[9px] text-gray-400">Propensity</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-mono font-bold text-emerald-700 text-lg">{opp.potentialValue}</div>
+                          <div className="text-[9px] text-gray-400">Potential</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Why conditions */}
+                    <div className="px-4 py-3 grid grid-cols-12 gap-4">
+                      <div className="col-span-6">
+                        <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Rule Conditions Met</div>
+                        <div className="space-y-1">
+                          {opp.conditions.map((c, i) => (
+                            <div key={i} className="flex items-center gap-1.5 text-[11px] text-gray-700">
+                              <CheckCircle2 size={11} className="text-emerald-600 shrink-0" />
+                              <span>{c}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="col-span-6">
+                        <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Justification</div>
+                        <p className="text-[11px] text-gray-600 leading-relaxed">{opp.why}</p>
+                        {rawOpp?.aiSummary && (
+                          <p className="text-[10px] text-gray-400 mt-1 italic">{rawOpp.aiSummary}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* RM Pitch Context — expanded on demand */}
+                    {rawOpp?.rmPitchContext && (
+                      <div className="border-t border-gray-100">
+                        <button
+                          onClick={() => setShowPitchMap(prev => ({...prev, [opp.id]: !showPitch}))}
+                          className="w-full px-4 py-2 flex items-center justify-between text-[11px] font-semibold text-[#1B4FD8] hover:bg-blue-50 transition-colors cursor-pointer"
+                        >
+                          <span>📋 RM Pitch Guide — Detailed talking points and contact strategy</span>
+                          <span>{showPitch ? '▲' : '▼'}</span>
+                        </button>
+                        {showPitch && (
+                          <div className="px-4 pb-4">
+                            <pre className="text-[10px] text-gray-700 bg-gray-50 border border-gray-200 rounded p-3 whitespace-pre-wrap font-mono leading-relaxed overflow-y-auto max-h-64">
+                              {rawOpp.rmPitchContext}
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Actions */}
+                    <div className="px-4 py-2.5 border-t border-gray-100 flex items-center justify-between bg-gray-50">
+                      <div className="text-[10px] text-gray-400 font-mono">
+                        {rawOpp?.contactWindow && <span>Best contact: {rawOpp.contactWindow.replace(/_/g, ' ')}</span>}
+                        {rawOpp?.suggestedContactBy && <span className="ml-3">By: {rawOpp.suggestedContactBy}</span>}
+                      </div>
+                      <button className="px-3 py-1.5 rounded bg-[#1B4FD8] hover:bg-[#113CAD] text-white text-xs font-bold cursor-pointer">
+                        Initiate Offer
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Case B: No opportunities — show WHY with rule gap analysis */}
+          {fullOpportunities.length === 0 && (
+            <div className="space-y-3">
+              {/* Overall summary banner */}
+              <div className="p-4 rounded-lg bg-amber-50 border border-amber-200">
+                <div className="flex items-start gap-3">
+                  <div className="text-amber-600 text-lg shrink-0">ℹ️</div>
+                  <div>
+                    <div className="text-xs font-bold text-amber-800 mb-1">No Active Opportunities — Here is Why</div>
+                    <p className="text-[11px] text-amber-700 leading-relaxed">
+                      {oppExplain?.overallSummary || 'Evaluating opportunity rules against this customer&apos;s current holdings...'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product coverage summary */}
+              {oppExplain && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-white border border-green-200">
+                    <div className="text-[10px] font-bold text-green-700 uppercase mb-2">✓ Products Held</div>
+                    {oppExplain.productsHeld.length > 0 ? (
+                      <div className="space-y-1">
+                        {oppExplain.productsHeld.map(p => (
+                          <div key={p} className="text-[11px] text-gray-700 flex items-center gap-1.5">
+                            <span className="text-green-600">●</span> {p.toUpperCase()}
+                          </div>
+                        ))}
+                      </div>
+                    ) : <p className="text-[11px] text-gray-400">None</p>}
+                  </div>
+                  <div className="p-3 rounded-lg bg-white border border-gray-200">
+                    <div className="text-[10px] font-bold text-gray-500 uppercase mb-2">✗ Products Missing</div>
+                    {oppExplain.productsMissing.length > 0 ? (
+                      <div className="space-y-1">
+                        {oppExplain.productsMissing.map(p => (
+                          <div key={p} className="text-[11px] text-gray-500 flex items-center gap-1.5">
+                            <span className="text-gray-400">○</span> {p.toUpperCase()}
+                          </div>
+                        ))}
+                      </div>
+                    ) : <p className="text-[11px] text-emerald-600 font-semibold">All products held — fully cross-sold</p>}
+                  </div>
+                </div>
+              )}
+
+              {/* Per-rule gap analysis */}
+              {oppExplain?.ruleEvaluations && oppExplain.ruleEvaluations.length > 0 && (
+                <div>
+                  <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Rule-by-Rule Gap Analysis</div>
+                  <div className="space-y-2">
+                    {oppExplain.ruleEvaluations.map(rule => (
+                      <div key={rule.ruleId} className={`rounded-lg border overflow-hidden ${rule.fired ? 'border-green-200' : 'border-gray-200'}`}>
+                        <div className={`px-4 py-2.5 flex items-center justify-between ${rule.fired ? 'bg-green-50' : 'bg-gray-50'}`}>
+                          <div>
+                            <span className="text-xs font-bold text-gray-800">{rule.ruleTitle}</span>
+                            <span className={`ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold ${rule.fired ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                              {rule.fired ? 'QUALIFIES' : 'DOES NOT QUALIFY'}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-gray-500 font-mono">{rule.product.toUpperCase()}</span>
+                        </div>
+                        <div className="px-4 py-3">
+                          <p className="text-[10px] text-gray-500 mb-2 italic">{rule.summary}</p>
+                          <div className="space-y-1.5">
+                            {rule.conditions.map((cond, ci) => (
+                              <div key={ci} className={`flex items-start gap-2 text-[10px] p-2 rounded ${cond.met ? 'bg-green-50' : 'bg-red-50'}`}>
+                                <span className={`shrink-0 font-bold ${cond.met ? 'text-green-600' : 'text-red-500'}`}>{cond.met ? '✓' : '✗'}</span>
+                                <div className="flex-1">
+                                  <span className="font-semibold text-gray-700">{cond.field}</span>
+                                  <span className="text-gray-400 mx-1">{cond.operator}</span>
+                                  <span className="font-mono text-gray-600">{cond.requiredValue}</span>
+                                  <span className="text-gray-400 mx-1">—</span>
+                                  <span className="font-mono text-gray-700">Actual: {cond.actualValue}</span>
+                                  {!cond.met && cond.gap && (
+                                    <div className="text-red-600 mt-0.5">Gap: {cond.gap}</div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -849,7 +762,7 @@ export const CustomerProfilePage: React.FC = () => {
           sourceLineage={lineage}
           goldenId={customer.goldenId}
           customerName={customer.name}
-          overallQuality={96}
+          overallQuality={confidenceScore}
         />
       )}
 

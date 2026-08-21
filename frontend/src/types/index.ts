@@ -150,6 +150,46 @@ export interface Opportunity {
   rmName: string;
   createdAt: string;
   lastUpdated: string;
+  // Enhanced fields
+  aiSummary?: string;
+  rmPitchContext?: string;
+  contactWindow?: string;
+  suggestedContactBy?: string;
+  contactReason?: string;
+  dataCompleteness?: string;
+  missingFields?: string[];
+  bundleSummary?: string;
+  category?: string;
+}
+
+// No-opportunity explanation from GET /api/opportunities/explain/{goldenId}
+export interface ConditionDetail {
+  field: string;
+  operator: string;
+  requiredValue: string;
+  actualValue: string;
+  met: boolean;
+  gap: string | null;
+}
+
+export interface RuleEvaluationDetail {
+  ruleId: string;
+  product: string;
+  ruleTitle: string;
+  fired: boolean;
+  conditions: ConditionDetail[];
+  summary: string;
+}
+
+export interface NoOpportunityExplanation {
+  goldenId: string;
+  customerName: string;
+  segment: string | null;
+  totalRelationshipValue: number;
+  productsHeld: string[];
+  productsMissing: string[];
+  ruleEvaluations: RuleEvaluationDetail[];
+  overallSummary: string;
 }
 
 // ============================================================

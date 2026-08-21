@@ -33,7 +33,9 @@ class OpportunityRuleEngineTest {
         configService = new StubConfigService();
         auditService = new StubAuditService();
 
-        engine = new OpportunityRuleEngine(goldenRepo, c360Service, oppRepo, configService, new OpportunityScoringService(configService), auditService, new ContactTimingService(), new AiSummaryService());
+        // Create a stub explain service (null dependencies — not called in unit tests)
+        OpportunityExplainService stubExplainService = new OpportunityExplainService(null, configService, oppRepo);
+        engine = new OpportunityRuleEngine(goldenRepo, c360Service, oppRepo, configService, new OpportunityScoringService(configService), auditService, new ContactTimingService(), new AiSummaryService(), stubExplainService);
 
         OpportunityRule rule1 = OpportunityRule.builder()
                 .id("insurance-cross-sell-v1")

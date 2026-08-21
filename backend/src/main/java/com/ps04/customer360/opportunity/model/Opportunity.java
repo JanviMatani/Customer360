@@ -54,8 +54,12 @@ public class Opportunity {
     private String suggestedContactBy; // ISO date string
     private String contactReason;
 
-    // Feature 7 — AI summary
+    // Feature 7 — AI summary / RM pitch context
     private String aiSummary;
+
+    // RM Pitch Context — detailed talking points for the RM when approaching the customer
+    // Contains: customer relationship summary, product gaps, suggested pitch, key signals
+    private String rmPitchContext;
 
     public Opportunity() {}
 
@@ -199,6 +203,9 @@ public class Opportunity {
 
     public String getAiSummary() { return aiSummary; }
     public void setAiSummary(String aiSummary) { this.aiSummary = aiSummary; }
+
+    public String getRmPitchContext() { return rmPitchContext; }
+    public void setRmPitchContext(String rmPitchContext) { this.rmPitchContext = rmPitchContext; }
 
     public static class ReasonItem {
         private String label;

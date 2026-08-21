@@ -30,6 +30,7 @@ public class OpportunityRuleEngine {
     private final AuditService auditService;
     private final ContactTimingService contactTimingService;
     private final AiSummaryService aiSummaryService;
+    private final OpportunityExplainService explainService;
 
     public OpportunityRuleEngine(GoldenCustomerRepo goldenCustomerRepo,
                                  Customer360Service customer360Service,
@@ -38,15 +39,17 @@ public class OpportunityRuleEngine {
                                  OpportunityScoringService scoringService,
                                  AuditService auditService,
                                  ContactTimingService contactTimingService,
-                                 AiSummaryService aiSummaryService) {
-        this.goldenCustomerRepo = goldenCustomerRepo;
-        this.customer360Service = customer360Service;
-        this.opportunityRepo = opportunityRepo;
-        this.configService = configService;
-        this.scoringService = scoringService;
-        this.auditService = auditService;
+                                 AiSummaryService aiSummaryService,
+                                 OpportunityExplainService explainService) {
+        this.goldenCustomerRepo   = goldenCustomerRepo;
+        this.customer360Service   = customer360Service;
+        this.opportunityRepo      = opportunityRepo;
+        this.configService        = configService;
+        this.scoringService       = scoringService;
+        this.auditService         = auditService;
         this.contactTimingService = contactTimingService;
-        this.aiSummaryService = aiSummaryService;
+        this.aiSummaryService     = aiSummaryService;
+        this.explainService       = explainService;
     }
 
     /**
@@ -129,6 +132,7 @@ public class OpportunityRuleEngine {
 
                 // Feature 7 - AI Summary
                 opp.setAiSummary(aiSummaryService.generateSummary(c360, opp));
+                opp.setRmPitchContext(explainService.generateRmPitchContext(c360, opp));
 
                 opp.setSuppressed(false);
                 opp.setSuppressedByOppId(null);

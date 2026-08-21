@@ -27,11 +27,11 @@ interface SourceLineagePanelProps {
 
 export const SourceLineagePanel: React.FC<SourceLineagePanelProps> = ({
   sourceLineage,
-  goldenId = 'GCUST0001',
-  customerName = 'Rahul Sharma',
-  createdOn = '12 Aug 2019, 11:23 AM',
-  lastUpdated = '20 May 2026, 10:05 AM',
-  overallQuality = 96,
+  goldenId = '',
+  customerName = '',
+  createdOn = '',
+  lastUpdated = '',
+  overallQuality = 0,
 }) => {
   const [isFlowExpanded, setIsFlowExpanded] = useState(true);
   const [isTransformationsExpanded, setIsTransformationsExpanded] = useState(true);

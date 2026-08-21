@@ -4,6 +4,7 @@ import com.ps04.customer360.auth.UserRepo;
 import com.ps04.customer360.auth.model.User;
 import com.ps04.customer360.config_rules.ConfigService;
 import com.ps04.customer360.ingestion.IngestionService;
+import com.ps04.customer360.ingestion.AtlasIngestionService;
 import com.ps04.customer360.ingestion.RawEquityRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +28,18 @@ public class InitialDataSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final MongoTemplate mongoTemplate;
     private final IngestionService ingestionService;
+    private final AtlasIngestionService atlasIngestionService;
     private final RawEquityRepo equityRepo;
 
     public InitialDataSeeder(UserRepo userRepo, PasswordEncoder passwordEncoder,
                              MongoTemplate mongoTemplate, IngestionService ingestionService,
+                             AtlasIngestionService atlasIngestionService,
                              RawEquityRepo equityRepo) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
         this.mongoTemplate = mongoTemplate;
         this.ingestionService = ingestionService;
+        this.atlasIngestionService = atlasIngestionService;
         this.equityRepo = equityRepo;
     }
 
@@ -164,7 +168,27 @@ public class InitialDataSeeder implements CommandLineRunner {
 
     private void seedDatasetIfEmpty() {
         if (equityRepo.count() == 0) {
-            log.info("Raw collections empty — attempting to auto-seed from classpath CSVs...");
+            log.info("Raw collections empty — trying Atlas financial360 collections first...");
+
+            try {
+                // PRIMARY: Read from Atlas financial360 database collections
+                // (equity, mutual_funds, insurance, loans, wealth)
+                int atlasCount = atlasIngestionService.ingestFromAtlas();
+
+                if (atlasCount > 0) {
+                    log.info("Successfully ingested {} records from Atlas financial360. Running matching pipeline...", atlasCount);
+                    ingestionService.reloadAndMatchAll();
+                    log.info("Atlas-based ingestion and matching completed.");
+                    return;
+                }
+
+                log.info("Atlas financial360 collections empty or unreachable — falling back to classpath CSVs...");
+
+            } catch (Exception e) {
+                log.warn("Atlas ingestion failed: {} — falling back to CSV files", e.getMessage());
+            }
+
+            // FALLBACK: Read from bundled CSV files (original behaviour)
             try {
                 PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
                 Resource[] resources = resolver.getResources("classpath:data/*.csv");
@@ -174,11 +198,11 @@ public class InitialDataSeeder implements CommandLineRunner {
                     if (filename == null) continue;
 
                     String sys = switch (filename.toLowerCase()) {
-                        case "equity.csv" -> "EQUITY";
+                        case "equity.csv"       -> "EQUITY";
                         case "mutual_funds.csv" -> "MF";
-                        case "insurance.csv" -> "INSURANCE";
-                        case "loans.csv" -> "LOANS";
-                        case "wealth.csv" -> "WEALTH";
+                        case "insurance.csv"    -> "INSURANCE";
+                        case "loans.csv"        -> "LOANS";
+                        case "wealth.csv"       -> "WEALTH";
                         default -> null;
                     };
 
@@ -188,11 +212,10 @@ public class InitialDataSeeder implements CommandLineRunner {
                     }
                 }
 
-                // Trigger initial matching and golden customer build
                 ingestionService.reloadAndMatchAll();
-                log.info("Initial dataset seeding and matching completed.");
+                log.info("CSV fallback seeding and matching completed.");
             } catch (Exception e) {
-                log.warn("Could not auto-seed CSVs on startup: {}", e.getMessage());
+                log.warn("Could not auto-seed from CSV files: {}", e.getMessage());
             }
         }
     }

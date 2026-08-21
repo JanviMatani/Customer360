@@ -1,6 +1,7 @@
 package com.ps04.customer360.opportunity;
 
 import com.ps04.customer360.audit.AuditService;
+import com.ps04.customer360.opportunity.OpportunityExplainService.NoOpportunityExplanation;
 import com.ps04.customer360.common.dto.PageResponse;
 import com.ps04.customer360.common.exception.ForbiddenException;
 import com.ps04.customer360.common.exception.NotFoundException;
@@ -26,13 +27,16 @@ public class OpportunityController {
     private final OpportunityRepo opportunityRepo;
     private final DataScopeService dataScopeService;
     private final AuditService auditService;
+    private final OpportunityExplainService explainService;
 
     public OpportunityController(OpportunityRepo opportunityRepo,
                                  DataScopeService dataScopeService,
-                                 AuditService auditService) {
-        this.opportunityRepo = opportunityRepo;
+                                 AuditService auditService,
+                                 OpportunityExplainService explainService) {
+        this.opportunityRepo  = opportunityRepo;
         this.dataScopeService = dataScopeService;
-        this.auditService = auditService;
+        this.auditService     = auditService;
+        this.explainService   = explainService;
     }
 
     public static class StatusUpdateRequest {
@@ -120,6 +124,20 @@ public class OpportunityController {
                 "opportunity", id, "Updated status of opportunity " + id + " from " + currentStatus + " to " + newStatus);
 
         return ResponseEntity.ok(opp);
+    }
+
+    /**
+     * GET /api/opportunities/explain/{goldenId}
+     * Returns a detailed explanation of why a customer has or hasn't qualified
+     * for opportunities — includes per-rule gap analysis and overall RM guidance.
+     * Available to all authenticated users (RM, manager, admin).
+     */
+    @GetMapping("/explain/{goldenId}")
+    public ResponseEntity<NoOpportunityExplanation> explainOpportunity(
+            @AuthenticationPrincipal AppPrincipal principal,
+            @PathVariable String goldenId) {
+        NoOpportunityExplanation explanation = explainService.explainNoOpportunity(goldenId);
+        return ResponseEntity.ok(explanation);
     }
 
     private Sort parseSort(String sortParam) {

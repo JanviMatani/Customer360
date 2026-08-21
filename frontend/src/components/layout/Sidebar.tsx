@@ -11,6 +11,7 @@ interface NavItem {
   icon: React.ReactNode;
   label: string;
   adminOnly?: boolean;
+  managerAndAbove?: boolean;
   badge?: number;
 }
 
@@ -23,13 +24,15 @@ export const Sidebar: React.FC = () => {
   const navItems: NavItem[] = [
     { to: '/dashboard', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
     { to: '/customers', icon: <Users size={18} />, label: 'Customer 360' },
-    { to: '/review', icon: <GitMerge size={18} />, label: 'Review Queue' },
+    // Review Queue: Manager and Admin only — RM cannot merge/separate identities
+    { to: '/review', icon: <GitMerge size={18} />, label: 'Review Queue', managerAndAbove: true },
     { to: '/opportunities', icon: <Sparkles size={18} />, label: 'Opportunities' },
     { to: '/audit', icon: <History size={18} />, label: 'Audit Log' },
     { to: '/config', icon: <Sliders size={18} />, label: 'Configuration', adminOnly: true },
   ];
 
   const isAdmin = user?.role === 'admin';
+  const isManagerOrAbove = user?.role === 'admin' || user?.role === 'manager';
 
   return (
     <div
@@ -48,6 +51,7 @@ export const Sidebar: React.FC = () => {
       {/* Nav items */}
       <nav className="flex flex-col items-center gap-1 flex-1 w-full px-2">
         {navItems.map((item) => {
+          // Admin-only items: show locked icon for non-admins
           if (item.adminOnly && !isAdmin) {
             return (
               <div
@@ -59,6 +63,10 @@ export const Sidebar: React.FC = () => {
                 <Shield size={8} className="absolute bottom-1.5 right-1.5 text-white/60" />
               </div>
             );
+          }
+          // Manager-and-above items: completely hidden from RM — not just greyed out
+          if (item.managerAndAbove && !isManagerOrAbove) {
+            return null;
           }
           return (
             <NavLink

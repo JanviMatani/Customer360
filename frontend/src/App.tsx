@@ -12,6 +12,7 @@ import { OpportunitiesPage } from './pages/OpportunitiesPage';
 import { ConfigurationPage } from './pages/ConfigurationPage';
 import { AuditLogPage } from './pages/AuditLogPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
+import { UserRole } from './types';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +39,20 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
+// Role-based route guard — redirects to /unauthorized if role not allowed
+interface RoleRouteProps {
+  allowedRoles: UserRole[];
+  children: React.ReactNode;
+}
+
+const RoleRoute: React.FC<RoleRouteProps> = ({ allowedRoles, children }) => {
+  const { user } = useAuthStore();
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+  return <>{children}</>;
+};
+
 export function App() {
   const { user } = useAuthStore();
 
@@ -61,7 +76,17 @@ export function App() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="customers" element={<CustomerListPage />} />
             <Route path="customers/:goldenId" element={<CustomerProfilePage />} />
-            <Route path="review" element={<ReviewQueuePage />} />
+
+            {/* Review Queue — Manager and Admin only. RM is blocked at route level. */}
+            <Route
+              path="review"
+              element={
+                <RoleRoute allowedRoles={['manager', 'admin']}>
+                  <ReviewQueuePage />
+                </RoleRoute>
+              }
+            />
+
             <Route path="opportunities" element={<OpportunitiesPage />} />
             <Route path="audit" element={<AuditLogPage />} />
             <Route path="config" element={<ConfigurationPage />} />

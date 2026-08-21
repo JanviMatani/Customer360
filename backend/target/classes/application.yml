@@ -4,7 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://localhost:27017/customer360}
+      uri: ${MONGO_URI:mongodb+srv://urja2432006_db_user:Yfypax2Rjo2gnEq2@cluster0.wfwuhzi.mongodb.net/customer360?appName=Cluster0}
   jackson:
     default-property-inclusion: non_null
     serialization:

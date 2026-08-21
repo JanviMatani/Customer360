@@ -193,6 +193,16 @@ public class IngestionService {
         }
     }
 
+    /**
+     * Public entry point for ingesting a single record from any source.
+     * Called by AtlasIngestionService to feed Atlas financial360 data into the pipeline.
+     * Idempotent — uses naturalKey upsert so calling twice is safe.
+     */
+    public void ingestFromMap(String sourceSystem, Map<String, String> raw) {
+        String batchId = "atlas-" + sourceSystem.toLowerCase();
+        saveRawRecord(sourceSystem, raw, batchId);
+    }
+
     private void saveRawRecord(String sourceSystem, Map<String, String> raw, String batchId) {
         NormalizedFields norm = computeNormalizedFields(raw);
         String cid = extractSourceCustomerId(sourceSystem, raw);
