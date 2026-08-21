@@ -136,7 +136,10 @@ export const LoginPage: React.FC = () => {
             {showHelper && (
               <div className="mt-2 p-2 bg-[#F8FAFC] border border-gray-200 rounded text-[11px] font-mono space-y-1 text-gray-600">
                 <button type="button" onClick={() => { setEmail('rm.anita@bank.com'); setPassword('Password123!'); }} className="w-full text-left hover:bg-blue-50 rounded px-1 py-0.5 transition-colors">
-                  <span className="font-semibold text-blue-700">RM:</span> rm.anita@bank.com
+                  <span className="font-semibold text-blue-700">RM Anita (RM101):</span> rm.anita@bank.com
+                </button>
+                <button type="button" onClick={() => { setEmail('rm.rajesh@bank.com'); setPassword('Password123!'); }} className="w-full text-left hover:bg-blue-50 rounded px-1 py-0.5 transition-colors">
+                  <span className="font-semibold text-blue-700">RM Rajesh (RM106):</span> rm.rajesh@bank.com
                 </button>
                 <button type="button" onClick={() => { setEmail('manager.vikram@bank.com'); setPassword('Password123!'); }} className="w-full text-left hover:bg-emerald-50 rounded px-1 py-0.5 transition-colors">
                   <span className="font-semibold text-emerald-700">Manager:</span> manager.vikram@bank.com
@@ -144,7 +147,7 @@ export const LoginPage: React.FC = () => {
                 <button type="button" onClick={() => { setEmail('admin@bank.com'); setPassword('Admin123!'); }} className="w-full text-left hover:bg-red-50 rounded px-1 py-0.5 transition-colors">
                   <span className="font-semibold text-red-700">Admin:</span> admin@bank.com
                 </button>
-                <div className="text-[10px] text-gray-400 border-t border-gray-200 pt-1 mt-1">Click a role to auto-fill credentials</div>
+                <div className="text-[10px] text-gray-400 border-t border-gray-200 pt-1 mt-1">Click a role to auto-fill · RM Rajesh owns Karan Patel (CUST0005)</div>
               </div>
             )}
           </div>

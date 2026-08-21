@@ -27,7 +27,7 @@ export const Sidebar: React.FC = () => {
     // Review Queue: Manager and Admin only — RM cannot merge/separate identities
     { to: '/review', icon: <GitMerge size={18} />, label: 'Review Queue', managerAndAbove: true },
     { to: '/opportunities', icon: <Sparkles size={18} />, label: 'Opportunities' },
-    { to: '/audit', icon: <History size={18} />, label: 'Audit Log' },
+    { to: '/audit', icon: <History size={18} />, label: 'Audit Log', adminOnly: true },
     { to: '/config', icon: <Sliders size={18} />, label: 'Configuration', adminOnly: true },
   ];
 

@@ -24,6 +24,7 @@ import {
   HelpCircle,
   ExternalLink,
   ShieldAlert,
+  Info,
 } from 'lucide-react';
 import { useCustomer, useCustomerOpportunities } from '../hooks/useCustomers';
 import { useOpportunityExplain } from '../hooks/useOpportunities';
@@ -38,6 +39,7 @@ import { SourceLineagePanel } from '../components/identity/SourceLineagePanel';
 import { TabbedHeaderLayout, TabItem } from '../components/layout/TabbedHeaderLayout';
 import { formatCurrency } from '../lib/utils';
 import { useAuthStore } from '../store/authStore';
+import { ApiError } from '../lib/api';
 
 export const CustomerProfilePage: React.FC = () => {
   const { goldenId = 'GCUST0001' } = useParams<{ goldenId: string }>();
@@ -77,17 +79,49 @@ export const CustomerProfilePage: React.FC = () => {
   }
 
   if (error || !customer) {
+    const is403 = error instanceof ApiError && error.status === 403;
     return (
-      <div className="p-8 text-center space-y-4">
-        <div className="text-red-600 font-bold text-base">
-          Customer Profile Not Found ({goldenId})
+      <div className="h-full flex items-center justify-center p-8">
+        <div className="text-center space-y-4 max-w-sm">
+          {is403 ? (
+            <>
+              {/* 403 — Access Denied — this is the SECURITY DEMO moment */}
+              <div className="w-14 h-14 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto">
+                <ShieldAlert size={28} className="text-red-600" />
+              </div>
+              <div>
+                <div className="text-sm font-bold text-red-700 mb-1">Access Denied — 403 Forbidden</div>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  This customer record is assigned to a different Relationship Manager.
+                  Your credentials do not have access to this portfolio.
+                </p>
+              </div>
+              <div className="p-3 rounded border border-red-100 bg-red-50 text-left space-y-1">
+                <div className="text-[10px] font-bold text-red-600 uppercase tracking-wider">Security Policy</div>
+                <div className="text-[10px] text-gray-600 font-mono">
+                  Role: {user?.role?.toUpperCase() ?? 'RM'}<br />
+                  Access: Restricted to assigned portfolio only<br />
+                  Backend enforcement: DataScopeService.canAccess()<br />
+                  Status: 403 Forbidden (audited)
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto">
+                <span className="text-2xl">🔍</span>
+              </div>
+              <div className="text-sm font-bold text-gray-700">Customer Not Found</div>
+              <p className="text-xs text-gray-400">Record {goldenId} does not exist in the system.</p>
+            </>
+          )}
+          <button
+            onClick={() => navigate('/customers')}
+            className="px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold cursor-pointer"
+          >
+            ← Back to Customer Registry
+          </button>
         </div>
-        <button
-          onClick={() => navigate('/customers')}
-          className="px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 text-gray-800 text-xs font-semibold cursor-pointer"
-        >
-          Back to Customer Registry
-        </button>
       </div>
     );
   }
@@ -160,6 +194,9 @@ export const CustomerProfilePage: React.FC = () => {
   // Each item from the backend has: field, weight, valueA, valueB, result, similarity
   const evidenceList = evidence.map((ev, i) => ({
     id: `ev-${i + 1}`,
+    // Normalize result to lowercase — backend Java enum serializes as uppercase (MATCH, CONFLICT etc.)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...((() => { const r = (ev.result as any)?.toLowerCase?.() ?? ev.result; return {
     category: ['pan', 'dob'].includes(ev.field) ? 'primary'
             : ['mobile', 'email'].includes(ev.field) ? 'contact'
             : 'financial',
@@ -175,9 +212,10 @@ export const CustomerProfilePage: React.FC = () => {
     name: ev.valueB ?? '—',
     source: sources[0]?.toUpperCase() ?? 'EQ',
     verifiedOn: '—',
-    verifiedSub: ev.result === 'match' ? 'Auto Matched' : ev.result === 'conflict' ? 'Conflict Detected' : ev.result,
-    status: ev.result === 'match' ? 'Verified' : ev.result === 'conflict' ? 'Conflict' : ev.result === 'partial' ? 'Partial' : 'Missing',
-    confidence: ev.result === 'match' ? 100 : ev.result === 'partial' ? Math.round((ev.similarity ?? 0.5) * 100) : 0,
+    verifiedSub: r === 'match' ? 'Auto Matched' : r === 'conflict' ? 'Conflict Detected' : r,
+    status: r === 'match' ? 'Verified' : r === 'conflict' ? 'Conflict' : r === 'partial' ? 'Partial' : 'Missing',
+    confidence: r === 'match' ? 100 : r === 'partial' ? Math.round((ev.similarity ?? 0.5) * 100) : 0,
+    }; })()),
   }));
 
   // Attribute conflicts: use real attribute conflicts from the backend
@@ -401,11 +439,11 @@ export const CustomerProfilePage: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Primary PAN:</span>
-                    <span className="font-mono font-bold text-gray-900">{customer.pan}</span>
+                    <MaskedField value={customer.pan} type="pan" allowReveal={true} />
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Primary Mobile:</span>
-                    <span className="font-mono font-bold text-gray-900">{customer.mobile}</span>
+                    <MaskedField value={customer.mobile} type="mobile" allowReveal={true} />
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Primary Email:</span>
@@ -452,10 +490,27 @@ export const CustomerProfilePage: React.FC = () => {
           </div>
 
           <div className="col-span-9 space-y-4">
-            <IdentityEvidenceTable
-              evidence={evidence}
-              overallConfidence={confidenceScore}
-            />
+            {evidence.length === 0 ? (
+              <div className="rounded-lg bg-white border border-gray-200 shadow-2xs p-8 text-center">
+                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
+                  <Info size={18} className="text-gray-400" />
+                </div>
+                <div className="text-sm font-semibold text-gray-700 mb-1">No Identity Evidence Available</div>
+                <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed">
+                  This customer was created from a single source system and was not matched against any other record.
+                  Identity evidence is only generated when two or more source records are compared by the matching engine.
+                </p>
+                <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded bg-blue-50 border border-blue-200 text-[11px] text-[#1B4FD8] font-semibold">
+                  <span>Source:</span>
+                  <span className="font-mono">{(customer.linkedSources || customer.sourceSystems || []).join(', ') || 'Single source'}</span>
+                </div>
+              </div>
+            ) : (
+              <IdentityEvidenceTable
+                evidence={evidence}
+                overallConfidence={confidenceScore}
+              />
+            )}
 
             <div className="rounded-lg bg-white border border-gray-200 shadow-2xs overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">

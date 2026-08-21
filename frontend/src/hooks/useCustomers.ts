@@ -22,6 +22,13 @@ export function useCustomer(goldenId?: string) {
     queryFn: () => (goldenId ? customersApi.getById(goldenId) : null),
     enabled: !!goldenId,
     staleTime: 30000,
+    throwOnError: false,  // Let error propagate to component — needed for 403 detection
+    retry: (failureCount, error) => {
+      // Don't retry on 403 (access denied) or 404 (not found)
+      const status = (error as { status?: number })?.status;
+      if (status === 403 || status === 404) return false;
+      return failureCount < 1;
+    },
   });
 }
 

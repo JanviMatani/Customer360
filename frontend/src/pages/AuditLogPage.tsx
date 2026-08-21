@@ -15,6 +15,7 @@ import { useAuditLogs } from '../hooks/useAudit';
 import { PaginationBar } from '../components/shared/PaginationBar';
 import { formatDateTime } from '../lib/utils';
 import { AuditLogEntry, UserRole } from '../types';
+import { RoleGuard } from '../components/shared/RoleGuard';
 
 export const AuditLogPage: React.FC = () => {
   const [selectedAction, setSelectedAction] = useState<string>('all');
@@ -96,6 +97,11 @@ export const AuditLogPage: React.FC = () => {
   };
 
   return (
+    <RoleGuard
+      allowedRoles={['admin']}
+      fallbackTitle="Audit Log — Administrator Access Only"
+      fallbackMessage="The Immutable Audit Trail is restricted to System Administrators for compliance and data governance. All access attempts are logged."
+    >
     <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#D8D5CD]">
@@ -259,5 +265,6 @@ export const AuditLogPage: React.FC = () => {
         />
       </div>
     </div>
+    </RoleGuard>
   );
 };

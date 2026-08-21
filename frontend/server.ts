@@ -156,7 +156,11 @@ function adaptCustomer(c: Record<string, unknown>): Record<string, unknown> {
     productHoldings,
     holdings: productHoldings,
     sourceLineage: ((c.sourceLineage ?? []) as Array<Record<string, unknown>>).map(adaptSourceLineage),
-    evidence: (c.evidenceTable ?? c.evidence ?? []) as unknown[],
+    evidence: ((c.evidenceTable ?? c.evidence ?? []) as Array<Record<string, unknown>>).map(ev => ({
+      ...ev,
+      // Normalize result to lowercase — Java enum serializes as MATCH/CONFLICT/PARTIAL/MISSING
+      result: typeof ev.result === 'string' ? ev.result.toLowerCase() : ev.result,
+    })),
     hasOpportunity: Boolean(c.hasOpportunity),
     opportunityCount: Number(c.opportunityCount ?? 0),
     isDangerousConflict: Boolean(c.isDangerousConflict),
@@ -246,7 +250,10 @@ function adaptReviewItem(r: Record<string, unknown>): Record<string, unknown> {
     })(),
     isDangerousConflict: Boolean(r.dangerousConflict || r.isDangerousConflict),
     conflictReason: String(r.dangerReason || r.conflictReason || ''),
-    evidence: r.evidence || [],
+    evidence: ((r.evidence || []) as Array<Record<string, unknown>>).map(ev => ({
+      ...ev,
+      result: typeof ev.result === 'string' ? ev.result.toLowerCase() : ev.result,
+    })),
     reviewedBy: r.decidedBy || r.reviewedBy,
     reviewedAt: r.decidedAt || r.reviewedAt,
     note: r.note,

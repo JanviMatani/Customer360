@@ -17,7 +17,9 @@ export const IdentityEvidenceTable: React.FC<IdentityEvidenceTableProps> = ({
   manualReviewThreshold = 60,
 }) => {
   const getResultBadge = (result: MatchResult, similarity?: number) => {
-    switch (result) {
+    // Normalize — backend Java enum serializes as uppercase (MATCH, CONFLICT etc.)
+    const r = result?.toLowerCase?.() as MatchResult ?? result;
+    switch (r) {
       case 'match':
         return (
           <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
@@ -50,7 +52,8 @@ export const IdentityEvidenceTable: React.FC<IdentityEvidenceTableProps> = ({
   };
 
   const getRowBg = (result: MatchResult) => {
-    switch (result) {
+    const r = result?.toLowerCase?.() as MatchResult ?? result;
+    switch (r) {
       case 'match':
         return 'hover:bg-[#F0FDF4]/30';
       case 'conflict':
